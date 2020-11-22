@@ -7,8 +7,9 @@ interface StateHolder {
     /**
      * Получение состояние таблицы
      * @param tableId id таблицы
+     * @return Состояние таблицы или null если состояния нет
      */
-    fun getState(tableId: String)
+    fun getState(tableId: String): String?
 
     /**
      * Установка нового состояния таблицы
@@ -20,8 +21,9 @@ interface StateHolder {
     /**
      * Удаление состояние таблицы по id
      * @param tableId id таблицы
+     * @return true в случае успешного удаления, false если таблицы с таким id не существует
      */
-    fun removeState(tableId: String)
+    fun removeState(tableId: String): Boolean
 
     /**
      * Удаление всех состояний таблиц

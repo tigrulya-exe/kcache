@@ -1,0 +1,3 @@
+# for tests only
+kcache:
+  state-holder: ram
