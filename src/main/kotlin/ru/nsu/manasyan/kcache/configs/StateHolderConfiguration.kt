@@ -13,11 +13,12 @@ import ru.nsu.manasyan.kcache.stateholder.RamStateHolder
 import ru.nsu.manasyan.kcache.stateholder.RedisStateHolder
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
+/**
+ * Правила создания бинов для [StateHolder]
+ */
 @Configuration
-class StateHolderConfiguration(
-    val properties: KCacheProperties
-) {
-    val logger by LoggerProperty()
+class StateHolderConfiguration {
+    private val logger by LoggerProperty()
 
     /**
      * Создание бина RamStateHolder.
@@ -66,7 +67,7 @@ class RamStateHolderConditional : AnyNestedCondition(ConfigurationCondition.Conf
         name = ["state-holder"],
         havingValue = "never"
     )
-    object asDefaultStateHolderCondition {
+    object DefaultStateHolderCondition {
     }
 
     /**
@@ -77,6 +78,6 @@ class RamStateHolderConditional : AnyNestedCondition(ConfigurationCondition.Conf
         name = ["state-holder"],
         havingValue = "ram"
     )
-    object asStateHolderFromPropertiesCondition {
+    object StateHolderFromPropertiesCondition {
     }
 }

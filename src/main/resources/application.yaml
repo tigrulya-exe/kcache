@@ -1,3 +1,11 @@
 # for tests only
 kcache:
   state-holder: ram
+logging:
+  level:
+#    root: Debug
+    ru:
+      nsu:
+        manasyan:
+          kcache:
+            configs: DEBUG

@@ -3,7 +3,7 @@ package ru.nsu.manasyan.kcache.annotations
 import kotlin.reflect.KClass
 
 @Target(AnnotationTarget.FUNCTION)
-annotation class EnableCache(
+annotation class KCacheable(
     /**
      * Таблицы, состояние которых должно измениться при вызове аннотированного участка кода
      */
