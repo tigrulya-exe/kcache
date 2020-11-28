@@ -7,5 +7,4 @@ logging:
     ru:
       nsu:
         manasyan:
-          kcache:
-            configs: DEBUG
+          kcache: DEBUG

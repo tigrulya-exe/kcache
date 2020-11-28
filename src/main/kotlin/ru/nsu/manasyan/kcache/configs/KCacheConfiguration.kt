@@ -40,10 +40,9 @@ class KCacheAutoConfiguration {
     @Bean
     @ConditionalOnBean(value = [StateHolder::class, ETagBuilder::class])
     fun kCacheAspect(
-        stateHolder: StateHolder,
         eTagBuilder: ETagBuilder
     ): KCacheAspect {
         logger.debug("Building KCacheAspect")
-        return KCacheAspect(stateHolder, eTagBuilder)
+        return KCacheAspect(eTagBuilder)
     }
 }
