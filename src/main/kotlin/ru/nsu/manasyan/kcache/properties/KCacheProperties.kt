@@ -16,4 +16,5 @@ class KCacheProperties (
         RAM,
         REDIS
     }
+    // TODO: add class for redis config
 }

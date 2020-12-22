@@ -3,6 +3,9 @@ package ru.nsu.manasyan.kcache.defaults
 import org.redisson.api.RedissonClient
 import ru.nsu.manasyan.kcache.core.StateHolder
 
+/**
+ * DB tables' states storage in Redis
+ */
 class RedisStateHolder(
     private val redissonClient: RedissonClient
 ): StateHolder {

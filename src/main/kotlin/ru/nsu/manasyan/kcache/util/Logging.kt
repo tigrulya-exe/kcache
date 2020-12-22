@@ -6,7 +6,7 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
- * Делегат, предоставляющий логгер для каждого класса
+ * Delegate, which provides logger for each class
  */
 class LoggerProperty : ReadOnlyProperty<Any?, Logger> {
 

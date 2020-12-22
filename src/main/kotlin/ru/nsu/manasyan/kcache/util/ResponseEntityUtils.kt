@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
 /**
- * Функция копирует текущий [ResponseEntity] и вставляет в него
- * заголовкок ETag со значением eTag
+ * @return new [ResponseEntity] instance with content of current [ResponseEntity]
+ * and affixed ETag HTTP-header value
  */
 fun ResponseEntity<*>.withEtag(eTag: String) : ResponseEntity<*> {
     return ResponseEntity
@@ -18,8 +18,8 @@ fun ResponseEntity<*>.withEtag(eTag: String) : ResponseEntity<*> {
 class EtagResponseBuilder {
     companion object {
         /**
-         * Функция возвращает экземпляр [ResponseEntity]
-         * с выставленным статусом 304 и заголовком ETag со значением eTag
+         * @return [ResponseEntity] instance with response code 304
+         * and affixed ETag HTTP-header value
          */
         fun notModified(eTag: String): ResponseEntity<*> {
             return ResponseEntity

@@ -5,12 +5,11 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
 /**
- * Хранилище состояний таблиц БД в оперативной памяти
+ * DB tables' states storage in RAM
  */
 class RamStateHolder : StateHolder {
     /**
-     * Сущность, в которой хранятся состояния таблиц БД.
-     * В качесте ключа используется id таблицы, в качестве значения - хэш состояния таблицы на данный момент
+     * Key - table id, value - table's hash
      */
     private val states: ConcurrentMap<String, String> = ConcurrentHashMap()
 
@@ -20,7 +19,7 @@ class RamStateHolder : StateHolder {
         states[tableId] = state
     }
 
-    override fun removeState(tableId: String)= states.remove(tableId) != null
+    override fun removeState(tableId: String) = states.remove(tableId) != null
 
     override fun clear() = states.clear()
 }
