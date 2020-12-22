@@ -7,8 +7,8 @@ import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
-import ru.nsu.manasyan.kcache.core.KCacheable
 import ru.nsu.manasyan.kcache.core.ETagBuilder
+import ru.nsu.manasyan.kcache.core.KCacheable
 import ru.nsu.manasyan.kcache.util.EtagResponseBuilder
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import ru.nsu.manasyan.kcache.util.withEtag
@@ -52,8 +52,10 @@ class KCacheableAspect(
      * otherwise wraps it in [ResponseEntity] with status code 200.
      */
     private fun getResponseEntity(functionReturn: Any): ResponseEntity<*> {
-        return if (functionReturn is ResponseEntity<*>)
-            functionReturn else ResponseEntity.ok(functionReturn)
+        return when (functionReturn) {
+            is ResponseEntity<*> -> functionReturn
+            else -> ResponseEntity.ok(functionReturn)
+        }
     }
 
     /**

@@ -1,6 +1,10 @@
 package ru.nsu.manasyan.kcache.configs
 
+import org.redisson.Redisson
+import org.redisson.api.RedissonClient
+import org.redisson.config.Config
 import org.springframework.boot.autoconfigure.condition.AnyNestedCondition
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
@@ -34,6 +38,20 @@ class StateHolderConfiguration {
         return RamStateHolder()
     }
 
+    // TODO
+    @Bean
+    @ConditionalOnProperty(
+        prefix = KCacheProperties.propertiesPrefix,
+        name = ["state-holder"],
+        havingValue = "redis"
+    )
+    fun redisClient(): RedissonClient {
+        logger.debug("Building RedissonClient")
+        val config = Config()
+        config.useSingleServer().address = "localhost"
+        return Redisson.create(config)
+    }
+
     /**
      * Создание бина RamStateHolder.
      * Эта функция вызовется, если пользователь не зарегистрировал в контексте
@@ -42,14 +60,15 @@ class StateHolderConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBean(RedissonClient::class)
     @ConditionalOnProperty(
         prefix = KCacheProperties.propertiesPrefix,
         name = ["state-holder"],
         havingValue = "redis"
     )
-    fun redisStateHolder(): StateHolder {
+    fun redisStateHolder(redisClient: RedissonClient): StateHolder {
         logger.debug("Building RedisStateHolder")
-        return RedisStateHolder()
+        return RedisStateHolder(redisClient)
     }
 }
 

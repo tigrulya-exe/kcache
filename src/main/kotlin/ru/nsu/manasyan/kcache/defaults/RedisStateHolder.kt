@@ -1,22 +1,24 @@
 package ru.nsu.manasyan.kcache.defaults
 
+import org.redisson.api.RedissonClient
 import ru.nsu.manasyan.kcache.core.StateHolder
 
-// TODO: implement
-class RedisStateHolder: StateHolder {
+class RedisStateHolder(
+    private val redissonClient: RedissonClient
+): StateHolder {
     override fun getState(tableId: String): String? {
-        TODO("Not yet implemented")
+        return redissonClient.getBucket<String>(tableId).get()
     }
 
     override fun setState(tableId: String, state: String) {
-        TODO("Not yet implemented")
+        redissonClient.getBucket<String>(tableId).set(state)
     }
 
     override fun removeState(tableId: String): Boolean {
-        TODO("Not yet implemented")
+        return redissonClient.getBucket<String>(tableId).delete()
     }
 
     override fun clear() {
-        TODO("Not yet implemented")
+        redissonClient.keys.flushall()
     }
 }

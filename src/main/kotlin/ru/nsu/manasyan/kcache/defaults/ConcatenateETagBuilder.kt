@@ -5,7 +5,7 @@ import ru.nsu.manasyan.kcache.core.StateHolder
 import ru.nsu.manasyan.kcache.exceptions.UnknownTableIdException
 
 /**
- * Простая имплементация строилтеля ETag, которая просто конкатенирует стейты таблиц.
+ * Простая имплементация строителя ETag, которая просто конкатенирует стейты таблиц.
  * Используется по умолчанию.
  */
 class ConcatenateETagBuilder(override val stateHolder: StateHolder) : ETagBuilder {

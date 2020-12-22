@@ -5,7 +5,7 @@ import kotlin.reflect.KClass
 /**
  * Аннотация, указывающая, что данный участок кода меняет состояние БД
  */
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+@Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class UpdateState(
 
