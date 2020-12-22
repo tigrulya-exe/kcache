@@ -1,7 +1,9 @@
 package ru.nsu.manasyan.kcache.core
 
+import com.github.matfax.klassindex.IndexAnnotated
 import kotlin.reflect.KClass
 
+@IndexAnnotated
 @Target(AnnotationTarget.FUNCTION)
 annotation class KCacheable(
     /**
@@ -15,3 +17,4 @@ annotation class KCacheable(
      */
     val entities: Array<KClass<*>> = []
 )
+
