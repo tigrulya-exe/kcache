@@ -1,7 +1,7 @@
-package ru.nsu.manasyan.kcache.core
+package ru.nsu.manasyan.kcache.defaults
 
-import ru.nsu.manasyan.kcache.api.ETagBuilder
-import ru.nsu.manasyan.kcache.api.StateHolder
+import ru.nsu.manasyan.kcache.core.ETagBuilder
+import ru.nsu.manasyan.kcache.core.StateHolder
 import ru.nsu.manasyan.kcache.exceptions.UnknownTableIdException
 
 /**

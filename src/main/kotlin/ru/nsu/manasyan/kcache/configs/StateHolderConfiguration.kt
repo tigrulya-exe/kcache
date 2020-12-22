@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Conditional
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.ConfigurationCondition
-import ru.nsu.manasyan.kcache.api.StateHolder
+import ru.nsu.manasyan.kcache.core.StateHolder
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
-import ru.nsu.manasyan.kcache.stateholder.RamStateHolder
-import ru.nsu.manasyan.kcache.stateholder.RedisStateHolder
+import ru.nsu.manasyan.kcache.defaults.RamStateHolder
+import ru.nsu.manasyan.kcache.defaults.RedisStateHolder
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
 /**

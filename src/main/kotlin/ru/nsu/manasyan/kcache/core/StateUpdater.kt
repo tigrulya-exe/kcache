@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.api
+package ru.nsu.manasyan.kcache.core
 
 /**
  * Сущность, отвечающая за обновление текущего состоянии таблиц БД

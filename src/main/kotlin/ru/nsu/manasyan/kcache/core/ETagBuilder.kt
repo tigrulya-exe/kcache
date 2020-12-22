@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.api
+package ru.nsu.manasyan.kcache.core
 
 /**
  * Сущность, отвечающая за построение значения ETag
@@ -11,7 +11,4 @@ interface ETagBuilder {
      * @param tableIds id таблиц, состояние которых необходимо использовать для построения ETag
      */
     fun buildETag(tableIds: Array<String>): String
-
-    // TODO мб добавить
-    //  fun buildETag(controllerMethodName: String)
 }

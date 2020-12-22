@@ -7,15 +7,15 @@ import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
-import ru.nsu.manasyan.kcache.annotations.KCacheable
-import ru.nsu.manasyan.kcache.api.ETagBuilder
+import ru.nsu.manasyan.kcache.core.KCacheable
+import ru.nsu.manasyan.kcache.core.ETagBuilder
 import ru.nsu.manasyan.kcache.util.EtagResponseBuilder
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import ru.nsu.manasyan.kcache.util.withEtag
 import java.lang.reflect.Method
 
 @Aspect
-class KCacheAspect(
+class KCacheableAspect(
     private val eTagBuilder: ETagBuilder
 ) {
     private val logger by LoggerProperty()
@@ -32,10 +32,10 @@ class KCacheAspect(
      * то вызывается оборачиваемый метод и возвращается его результат ([ResponseEntity]), но
      * с проставленным заголовком ETag, равным текущему значению ETag.
      */
-    @Around("@annotation(ru.nsu.manasyan.kcache.annotations.KCacheable)")
+    @Around("@annotation(ru.nsu.manasyan.kcache.core.KCacheable)")
     fun wrapKCacheableControllerMethod(joinPoint: ProceedingJoinPoint): ResponseEntity<*> {
         val method = (joinPoint.signature as MethodSignature).method
-        val currentETag = eTagBuilder.buildETag(getKCacheableTables(method))
+        val currentETag = eTagBuilder.buildETag(getAnnotationInstance<KCacheable>(method).tables)
         val previousETag = getEtagFromMethodArgs(method, joinPoint.args)
 
         if (currentETag == previousETag) {
@@ -44,25 +44,16 @@ class KCacheAspect(
         }
 
         logger.debug("Different ETags: Current [$currentETag] Previous[$previousETag]. Invoking method.")
-        // TODO тут можно чекать если это не ResponseEntity, то пихать возврат в тело
-        // TODO прикрутить валидацию, что возвращается ResponseEntity<*>
-        return (joinPoint.proceed() as ResponseEntity<*>).withEtag(currentETag)
+        return getResponseEntity(joinPoint.proceed()).withEtag(currentETag)
     }
 
     /**
-     * Получение списка кэшируемых таблиц метода method
-     * @return Массив id кэшируемых таблиц
+     * If functionReturn is [ResponseEntity] returns it,
+     * otherwise wraps it in [ResponseEntity] with status code 200.
      */
-    private fun getKCacheableTables(method: Method): Array<String> {
-        val kCacheableAnnotation = method
-            .annotations
-            .filterIsInstance<KCacheable>()
-            .ifEmpty {
-                logger.debug("No tables was found in KCacheable annotation of method $method")
-                return arrayOf()
-            }[0]
-
-        return kCacheableAnnotation.tables
+    private fun getResponseEntity(functionReturn: Any): ResponseEntity<*> {
+        return if (functionReturn is ResponseEntity<*>)
+            functionReturn else ResponseEntity.ok(functionReturn)
     }
 
     /**

@@ -5,10 +5,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import ru.nsu.manasyan.kcache.api.ETagBuilder
-import ru.nsu.manasyan.kcache.api.StateHolder
-import ru.nsu.manasyan.kcache.aspect.KCacheAspect
-import ru.nsu.manasyan.kcache.core.ConcatenateETagBuilder
+import ru.nsu.manasyan.kcache.core.ETagBuilder
+import ru.nsu.manasyan.kcache.core.StateHolder
+import ru.nsu.manasyan.kcache.aspect.KCacheableAspect
+import ru.nsu.manasyan.kcache.aspect.UpdateStateAspect
+import ru.nsu.manasyan.kcache.defaults.ConcatenateETagBuilder
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
@@ -34,15 +35,29 @@ class KCacheAutoConfiguration {
     }
 
     /**
-     * Создает аспект [KCacheAspect] в случае,
+     * Создает аспект [KCacheableAspect] в случае,
      * если в контексте находятся экземпляры [StateHolder] и [ETagBuilder]
      */
     @Bean
     @ConditionalOnBean(value = [StateHolder::class, ETagBuilder::class])
     fun kCacheAspect(
         eTagBuilder: ETagBuilder
-    ): KCacheAspect {
+    ): KCacheableAspect {
         logger.debug("Building KCacheAspect")
-        return KCacheAspect(eTagBuilder)
+        return KCacheableAspect(eTagBuilder)
     }
+
+    /**
+     * Создает аспект [UpdateStateAspect] в случае,
+     * если в контексте находятся экземпляры [StateHolder] и [ETagBuilder]
+     */
+    @Bean
+    @ConditionalOnBean(value = [StateHolder::class, ETagBuilder::class])
+    fun updateStateAspect(
+        stateHolder: StateHolder
+    ): UpdateStateAspect {
+        logger.debug("Building UpdateStateAspect")
+        return UpdateStateAspect(stateHolder)
+    }
+
 }
