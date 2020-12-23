@@ -27,7 +27,7 @@ class StateHolderConfiguration {
     /**
      * Создание бина RamStateHolder.
      * Эта функция вызовется, если пользователь не зарегистрировал в контексте
-     * свою имплементацию интерфейса StateHolder или задал значение kcache.state-holder
+     * свою имплементацию интерфейса StateHolder или задал значение ru.nsu.manasyan.ru.nsu.manasyan.kcache.state-holder
      * в applications.yaml/properties, отличное от [KCacheProperties.StateHolder.RAM]
      */
     @Bean
@@ -48,14 +48,14 @@ class StateHolderConfiguration {
     fun redisClient(): RedissonClient {
         logger.debug("Building RedissonClient")
         val config = Config()
-        config.useSingleServer().address = "localhost"
+        config.useSingleServer().address = "redis://127.0.0.1:6379"
         return Redisson.create(config)
     }
 
     /**
      * Создание бина RamStateHolder.
      * Эта функция вызовется, если пользователь не зарегистрировал в контексте
-     * свою имплементацию интерфейса StateHolder или задал значение kcache.state-holder
+     * свою имплементацию интерфейса StateHolder или задал значение ru.nsu.manasyan.ru.nsu.manasyan.kcache.state-holder
      * в applications.yaml/properties, отличное от [KCacheProperties.StateHolder.RAM]
      */
     @Bean
@@ -78,7 +78,7 @@ class StateHolderConfiguration {
 class RamStateHolderConditional : AnyNestedCondition(ConfigurationCondition.ConfigurationPhase.REGISTER_BEAN) {
 
     /**
-     * Случай по умолчанию, когда не задано значение kcache.state-holder в applications.yaml/properties
+     * Случай по умолчанию, когда не задано значение ru.nsu.manasyan.ru.nsu.manasyan.kcache.state-holder в applications.yaml/properties
      */
     @ConditionalOnProperty(
         matchIfMissing = true,
@@ -90,7 +90,7 @@ class RamStateHolderConditional : AnyNestedCondition(ConfigurationCondition.Conf
     }
 
     /**
-     * Случай, когда kcache.state-holder в applications.yaml/properties установлен как ram
+     * Случай, когда ru.nsu.manasyan.ru.nsu.manasyan.kcache.state-holder в applications.yaml/properties установлен как ram
      */
     @ConditionalOnProperty(
         prefix = KCacheProperties.propertiesPrefix,

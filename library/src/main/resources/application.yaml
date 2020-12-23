@@ -1,6 +1,6 @@
 # for tests only
 kcache:
-  state-holder: ram
+  state-holder: redis
 logging:
   level:
 #    root: Debug

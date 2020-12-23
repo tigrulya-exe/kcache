@@ -11,8 +11,7 @@ import kotlin.reflect.KProperty
 class LoggerProperty : ReadOnlyProperty<Any?, Logger> {
 
     companion object {
-        private fun <T> createLogger(clazz: Class<T>) =
-            LoggerFactory.getLogger(clazz)
+        private fun <T> createLogger(clazz: Class<T>) = LoggerFactory.getLogger(clazz)
     }
 
     private var logger: Logger? = null

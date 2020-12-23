@@ -64,8 +64,7 @@ class KCacheableAspect(
      * @return Значения такого аргумента, null если такой не обнаружен.
      */
     private fun getEtagFromMethodArgs(method: Method, methodArgs: Array<Any>): String? {
-        for ((currentParameter, parameterAnnotations)
-        in method.parameterAnnotations.withIndex()) {
+        for ((currentParameter, parameterAnnotations) in method.parameterAnnotations.withIndex()) {
             for (parameterAnnotation in parameterAnnotations) {
                 if (parameterAnnotation is RequestHeader
                     && parameterAnnotation.name == HttpHeaders.IF_NONE_MATCH
