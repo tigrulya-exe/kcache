@@ -4,6 +4,14 @@ plugins {
     kotlin("plugin.spring") version "1.4.10"
 }
 
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar>{
+    enabled = false
+}
+
+tasks.withType<Jar>{
+    enabled = true
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-aop")

@@ -18,7 +18,7 @@ dependencies {
     implementation("org.redisson:redisson:3.14.1")
 
     implementation(project(":library"))
-//    kapt(project(":processor"))
+    kapt(project(":processor"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
