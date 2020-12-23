@@ -1,12 +1,11 @@
-package ru.nsu.manasyan.kcache
+package com.example.app
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class KCacheApplication
+class TestApplication
 
-// TODO: remove
 fun main(args: Array<String>) {
-    runApplication<KCacheApplication>(*args)
+    runApplication<TestApplication>(*args)
 }
