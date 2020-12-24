@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import ru.nsu.manasyan.kcache.core.ETagBuilder
 import ru.nsu.manasyan.kcache.core.StateHolder
 import ru.nsu.manasyan.kcache.aspect.KCacheableAspect
@@ -17,6 +18,7 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
  * Класс-конфигуратор для стартера
  */
 @Configuration
+@Import(StateHolderConfiguration::class)
 @EnableConfigurationProperties(KCacheProperties::class)
 class KCacheAutoConfiguration {
     private val logger by LoggerProperty()
@@ -30,6 +32,8 @@ class KCacheAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnBean(value = [StateHolder::class])
     fun eTagBuilder(stateHolder: StateHolder): ETagBuilder {
+//        val file = this::class.java.getResource("requestStatesMapping.json")
+//        println(file.readText())
         logger.debug("Building ConcatenateETagBuilder")
         return ConcatenateETagBuilder(stateHolder)
     }
