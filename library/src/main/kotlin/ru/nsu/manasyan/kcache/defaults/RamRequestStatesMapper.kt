@@ -5,13 +5,17 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
 class RamRequestStatesMapper : RequestStatesMapper {
-    private val statesMapping: ConcurrentMap<String, Array<String>> = ConcurrentHashMap()
+    private val statesMapping: ConcurrentMap<String, List<String>> = ConcurrentHashMap()
 
-    override fun getStates(requestName: String): Array<String>? {
+    override fun getRequestStates(requestName: String): List<String>? {
         return statesMapping[requestName]
     }
 
-    override fun setStates(requestName: String, states: Array<String>) {
+    override fun setRequestStates(requestName: String, states: List<String>) {
         statesMapping[requestName] = states
+    }
+
+    override fun getAllStates(): Map<String, List<String>> {
+        return HashMap(statesMapping)
     }
 }

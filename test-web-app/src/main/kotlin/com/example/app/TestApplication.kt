@@ -7,6 +7,5 @@ import org.springframework.boot.runApplication
 class TestApplication
 
 fun main(args: Array<String>) {
-    val context = runApplication<TestApplication>(*args)
-    context.beanDefinitionNames.forEach { println(it) }
+    runApplication<TestApplication>(*args)
 }

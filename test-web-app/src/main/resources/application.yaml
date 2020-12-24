@@ -3,7 +3,7 @@ kcache:
   state-holder: ram
 logging:
   level:
-#    root: Debug
+    #    root: Debug
     ru:
       nsu:
         manasyan:

@@ -2,15 +2,14 @@ package ru.nsu.kcache
 
 import com.google.auto.service.AutoService
 import com.google.gson.Gson
-import jdk.jshell.Diag
 import ru.nsu.manasyan.kcache.core.KCacheable
+import ru.nsu.manasyan.kcache.core.RequestStatesMapper
 import ru.nsu.manasyan.kcache.defaults.RamRequestStatesMapper
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
-import javax.tools.Diagnostic
 import javax.tools.FileObject
 import javax.tools.StandardLocation
 
@@ -18,8 +17,6 @@ import javax.tools.StandardLocation
 class KCacheableProcessor : AbstractProcessor() {
 
     companion object {
-        private const val MAPPINGS_FILE_NAME = "requestStatesMapping.json"
-
         private const val MAPPINGS_FILE_PREFIX = ""
     }
 
@@ -45,7 +42,7 @@ class KCacheableProcessor : AbstractProcessor() {
         mappingsFile = filer.createResource(
             StandardLocation.CLASS_OUTPUT,
             MAPPINGS_FILE_PREFIX,
-            MAPPINGS_FILE_NAME
+            RequestStatesMapper.MAPPINGS_FILE_PATH
         )
     }
 
@@ -58,9 +55,9 @@ class KCacheableProcessor : AbstractProcessor() {
                     element.enclosingElement as TypeElement
                 )
                 element.getAnnotation(KCacheable::class.java)?.let {
-                    mapper.setStates(
+                    mapper.setRequestStates(
                         "$enclosingName.${element.simpleName}",
-                        it.tables
+                        it.tables.asList()
                     )
                 }
             }

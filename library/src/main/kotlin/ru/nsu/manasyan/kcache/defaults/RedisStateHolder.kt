@@ -8,7 +8,7 @@ import ru.nsu.manasyan.kcache.core.StateHolder
  */
 class RedisStateHolder(
     private val redissonClient: RedissonClient
-): StateHolder {
+) : StateHolder {
     override fun getState(tableId: String): String? {
         return redissonClient.getBucket<String>(tableId).get()
     }

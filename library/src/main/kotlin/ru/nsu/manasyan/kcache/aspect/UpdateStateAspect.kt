@@ -4,8 +4,8 @@ import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
-import ru.nsu.manasyan.kcache.core.UpdateState
 import ru.nsu.manasyan.kcache.core.StateHolder
+import ru.nsu.manasyan.kcache.core.UpdateState
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import java.time.Instant
 import java.time.format.DateTimeFormatter

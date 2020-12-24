@@ -1,7 +1,13 @@
 package ru.nsu.manasyan.kcache.core
 
 interface RequestStatesMapper {
-    fun getStates(requestName: String): Array<String>?
+    companion object {
+        const val MAPPINGS_FILE_PATH = "requestStatesMapping.json"
+    }
 
-    fun setStates(requestName: String, states: Array<String>)
+    fun getRequestStates(requestName: String): List<String>?
+
+    fun setRequestStates(requestName: String, states: List<String>)
+
+    fun getAllStates(): Map<String, List<String>>
 }

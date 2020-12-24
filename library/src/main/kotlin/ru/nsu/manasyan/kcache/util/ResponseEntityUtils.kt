@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity
  * @return new [ResponseEntity] instance with content of current [ResponseEntity]
  * and affixed ETag HTTP-header value
  */
-fun ResponseEntity<*>.withEtag(eTag: String) : ResponseEntity<*> {
+fun ResponseEntity<*>.withEtag(eTag: String): ResponseEntity<*> {
     return ResponseEntity
         .status(this.statusCode)
         .headers(this.headers)

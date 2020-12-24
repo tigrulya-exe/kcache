@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 import ru.nsu.manasyan.kcache.core.KCacheable
 
-@RestController("test/")
-class TestController (private val service: TestService) {
+@RestController("/test")
+class TestController(private val service: TestService) {
     @KCacheable(tables = ["users"])
-    @GetMapping("Get")
+    @GetMapping("/users")
     fun getUsers(@RequestHeader(name = HttpHeaders.IF_NONE_MATCH) ifNoneMatch: String): ResponseEntity<*> {
         return ResponseEntity.ok().body(service.getUsers())
     }
@@ -21,10 +21,10 @@ class TestController (private val service: TestService) {
 class TestService {
     fun getUsers(): List<TestUser> {
         return listOf(
-                TestUser("ONE", 1),
-                TestUser("TWO", 2),
-                TestUser("THREE", 3),
-                TestUser("FOUR", 4),
+            TestUser("ONE", 1),
+            TestUser("TWO", 2),
+            TestUser("THREE", 3),
+            TestUser("FOUR", 4),
         )
     }
 }

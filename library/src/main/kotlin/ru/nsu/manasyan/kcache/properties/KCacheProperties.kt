@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConstructorBinding
 @ConfigurationProperties(KCacheProperties.propertiesPrefix)
-class KCacheProperties (
+class KCacheProperties(
     val stateHolder: StateHolder?
 ) {
     companion object {
