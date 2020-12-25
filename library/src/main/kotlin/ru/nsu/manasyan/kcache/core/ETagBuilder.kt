@@ -10,5 +10,5 @@ interface ETagBuilder {
      * Построение значение ETag по текущему состоянию таблиц
      * @param tableIds id таблиц, состояние которых необходимо использовать для построения ETag
      */
-    fun buildETag(tableIds: Array<String>): String
+    fun buildETag(tableIds: List<String>): String
 }

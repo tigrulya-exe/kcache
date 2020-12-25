@@ -56,7 +56,7 @@ class KCacheableProcessor : AbstractProcessor() {
                 )
                 element.getAnnotation(KCacheable::class.java)?.let {
                     mapper.setRequestStates(
-                        "$enclosingName.${element.simpleName}",
+                        "$enclosingName.$element",
                         it.tables.asList()
                     )
                 }

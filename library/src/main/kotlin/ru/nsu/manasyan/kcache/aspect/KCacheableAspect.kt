@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
 import ru.nsu.manasyan.kcache.core.ETagBuilder
 import ru.nsu.manasyan.kcache.core.KCacheable
+import ru.nsu.manasyan.kcache.core.RequestStatesMapper
 import ru.nsu.manasyan.kcache.util.EtagResponseBuilder
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import ru.nsu.manasyan.kcache.util.withEtag
@@ -16,7 +17,8 @@ import java.lang.reflect.Method
 
 @Aspect
 class KCacheableAspect(
-    private val eTagBuilder: ETagBuilder
+    private val eTagBuilder: ETagBuilder,
+    private val requestStatesMapper: RequestStatesMapper
 ) {
     private val logger by LoggerProperty()
 
@@ -34,9 +36,14 @@ class KCacheableAspect(
      */
     @Around("@annotation(ru.nsu.manasyan.kcache.core.KCacheable)")
     fun wrapKCacheableControllerMethod(joinPoint: ProceedingJoinPoint): ResponseEntity<*> {
-        val method = (joinPoint.signature as MethodSignature).method
-        val currentETag = eTagBuilder.buildETag(getAnnotationInstance<KCacheable>(method).tables)
-        val previousETag = getEtagFromMethodArgs(method, joinPoint.args)
+        val methodSignature = joinPoint.signature as MethodSignature
+        val currentETag = eTagBuilder.buildETag(
+            requestStatesMapper.getRequestStates(methodSignature)
+        )
+        val previousETag = getEtagFromMethodArgs(
+            methodSignature.method,
+            joinPoint.args
+        )
 
         if (currentETag == previousETag) {
             logger.debug("Equal ETags: $currentETag, returning 304")
@@ -44,7 +51,9 @@ class KCacheableAspect(
         }
 
         logger.debug("Different ETags: Current [$currentETag] Previous[$previousETag]. Invoking method.")
-        return getResponseEntity(joinPoint.proceed()).withEtag(currentETag)
+        return getResponseEntity(
+            joinPoint.proceed()
+        ).withEtag(currentETag)
     }
 
     /**
@@ -69,7 +78,7 @@ class KCacheableAspect(
                 if (parameterAnnotation is RequestHeader
                     && parameterAnnotation.name == HttpHeaders.IF_NONE_MATCH
                 ) {
-                    return (methodArgs[currentParameter] as String).ifBlank {
+                    return (methodArgs[currentParameter] as String?)?.ifBlank {
                         logger.debug("Blank If-None-Match header value was found in method ${method.name}")
                         return null
                     }

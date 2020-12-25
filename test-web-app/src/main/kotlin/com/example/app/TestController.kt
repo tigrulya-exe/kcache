@@ -12,7 +12,10 @@ import ru.nsu.manasyan.kcache.core.KCacheable
 class TestController(private val service: TestService) {
     @KCacheable(tables = ["users"])
     @GetMapping("/users")
-    fun getUsers(@RequestHeader(name = HttpHeaders.IF_NONE_MATCH) ifNoneMatch: String): ResponseEntity<*> {
+    fun getUsers(
+        @RequestHeader(name = HttpHeaders.IF_NONE_MATCH, required = false)
+        ifNoneMatch: String?
+    ): ResponseEntity<*> {
         return ResponseEntity.ok().body(service.getUsers())
     }
 }

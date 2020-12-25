@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter
 
 @Aspect
 class UpdateStateAspect(
-    private val stateHolder: StateHolder
+    private val stateHolder: StateHolder,
 ) {
     private val logger by LoggerProperty()
 

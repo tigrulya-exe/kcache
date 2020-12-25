@@ -12,7 +12,7 @@ class ConcatenateETagBuilder(override val stateHolder: StateHolder) : ETagBuilde
         const val DEFAULT_SEPARATOR = ":"
     }
 
-    override fun buildETag(tableIds: Array<String>): String {
+    override fun buildETag(tableIds: List<String>): String {
         return tableIds.joinToString(separator = DEFAULT_SEPARATOR) {
             stateHolder.getState(it) ?: throw UnknownTableIdException("Wrong table id: $it")
         }
