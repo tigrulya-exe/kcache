@@ -16,10 +16,15 @@ class UpdateStateAspect(
 ) {
     private val logger by LoggerProperty()
 
+    /**
+     * Processes section of code, which changes the state of the DB.
+     * Updates state of each DB table, listed in the tables field of [UpdateState]
+     */
     @After("@annotation(ru.nsu.manasyan.kcache.core.UpdateState)")
     fun wrapUpdateStateMethod(joinPoint: JoinPoint) {
         val method = (joinPoint.signature as MethodSignature).method
-        val updatedTables = getAnnotationInstance<UpdateState>(method).tables
+        // we know, that method has UpdateState annotation
+        val updatedTables = getAnnotationInstance<UpdateState>(method)!!.tables
 
         updatedTables.forEach {
             val newState = DateTimeFormatter.ISO_INSTANT.format(Instant.now())

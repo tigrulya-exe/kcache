@@ -1,14 +1,15 @@
 package ru.nsu.manasyan.kcache.core
 
 /**
- * Сущность, отвечающая за построение значения ETag
+ *
+ * The entity responsible for constructing the ETag value
  */
 interface ETagBuilder {
     val stateHolder: StateHolder
 
     /**
-     * Построение значение ETag по текущему состоянию таблиц
-     * @param tableIds id таблиц, состояние которых необходимо использовать для построения ETag
+     * Function builds the ETag value based on the current state of DB tables
+     * @param tableIds table ids, which state will be used during ETag construction
      */
     fun buildETag(tableIds: List<String>): String
 }

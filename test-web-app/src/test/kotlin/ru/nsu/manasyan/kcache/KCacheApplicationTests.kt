@@ -26,6 +26,10 @@ class KCacheSimpleApplicationTests(
         const val GET_USERS_PATH = "/test/users"
 
         const val ADD_USERS_PATH = "/test/users"
+
+        const val DEFAULT_USER_NAME = "TEST_NAME"
+
+        const val DEFAULT_USER_AGE = 18
     }
 
     @Test
@@ -86,8 +90,7 @@ class KCacheSimpleApplicationTests(
     }
 
     private fun getTestUser() = TestUser(
-        id = null,
-        name = "TEST_NAME",
-        age = 18
+        name = DEFAULT_USER_NAME,
+        age = DEFAULT_USER_AGE
     )
 }

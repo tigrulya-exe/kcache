@@ -1,32 +1,28 @@
 package ru.nsu.manasyan.kcache.core
 
 /**
- * Сущность, в которой хранится вся информация о текущем состоянии таблиц БД
+ * Entity, which contains information about current DB tables state
  */
 interface StateHolder {
     /**
-     * Получение состояние таблицы
-     * @param tableId id таблицы
-     * @return Состояние таблицы или null если состояния нет
+     * @return state of table with id == tableId or null if such not found
      */
     fun getState(tableId: String): String?
 
     /**
-     * Установка нового состояния таблицы
-     * @param tableId id таблицы
-     * @param state новое состояние таблицы
+     * Sets a new state of table with id == tableId
+     * @param state new state of table
      */
     fun setState(tableId: String, state: String)
 
     /**
-     * Удаление состояние таблицы по id
-     * @param tableId id таблицы
-     * @return true в случае успешного удаления, false если таблицы с таким id не существует
+     * Removes state of table with id == tableId
+     * @return true if state was deleted, false otherwise
      */
     fun removeState(tableId: String): Boolean
 
     /**
-     * Удаление всех состояний таблиц
+     * Removes all tables' states
      */
     fun clear()
 }

@@ -1,19 +1,14 @@
 package ru.nsu.manasyan.kcache.core
 
 /**
- * Сущность, отвечающая за обновление текущего состоянии таблиц БД
+ * Entity which updates current states of DB tables
  */
 interface StateUpdater {
-    /**
-     * TODO: еще надо подумать
-     * Мы должны заинджектить текущее состояние бд во всех апдейтеров
-     */
+    // TODO: We should inject current DB state into all StateUpdaters
     val stateHolder: StateHolder
 
-    /**
-     * TODO: еще надо подумать, мб незачем это в метод выносить
-     * Обновление состояния таблцы БД
-     */
+
+    // TODO: mb remove
     fun updateState(tableId: String, state: String) {
         stateHolder.setState(tableId, state)
     }

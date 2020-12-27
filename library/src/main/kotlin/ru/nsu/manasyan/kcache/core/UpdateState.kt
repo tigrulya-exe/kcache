@@ -3,14 +3,14 @@ package ru.nsu.manasyan.kcache.core
 import kotlin.reflect.KClass
 
 /**
- * Аннотация, указывающая, что данный участок кода меняет состояние БД
+ * Indicates, that this section of code changes the state of the DB
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class UpdateState(
 
     /**
-     * Таблицы, состояние которых должно измениться при вызове аннотированного участка кода
+     * Tables, whose state should change when annotated code section will be called
      */
     val tables: Array<String>,
 

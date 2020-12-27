@@ -18,17 +18,16 @@ import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
 /**
- * Правила создания бинов для [StateHolder]
+ * Configuration rules for [StateHolder] beans
  */
 @Configuration
 class StateHolderConfiguration {
     private val logger by LoggerProperty()
 
     /**
-     * Создание бина RamStateHolder.
-     * Эта функция вызовется, если пользователь не зарегистрировал в контексте
-     * свою имплементацию интерфейса StateHolder или задал значение ru.nsu.manasyan.ru.nsu.manasyan.kcache.state-holder
-     * в applications.yaml/properties, отличное от [KCacheProperties.StateHolder.RAM]
+     * Creates [RamStateHolder] bean if
+     * there was no [RamStateHolder] in context or kcache.state-holder
+     * property's value in properties file is [KCacheProperties.StateHolder.RAM]
      */
     @Bean
     @ConditionalOnMissingBean
@@ -38,7 +37,7 @@ class StateHolderConfiguration {
         return RamStateHolder()
     }
 
-    // TODO
+    // TODO: get address and other props from properties file
     @Bean
     @ConditionalOnProperty(
         prefix = KCacheProperties.propertiesPrefix,
@@ -53,10 +52,8 @@ class StateHolderConfiguration {
     }
 
     /**
-     * Создание бина RamStateHolder.
-     * Эта функция вызовется, если пользователь не зарегистрировал в контексте
-     * свою имплементацию интерфейса StateHolder или задал значение ru.nsu.manasyan.ru.nsu.manasyan.kcache.state-holder
-     * в applications.yaml/properties, отличное от [KCacheProperties.StateHolder.RAM]
+     * Creates [RedisStateHolder] bean if kcache.state-holder
+     * property's value in properties file is [KCacheProperties.StateHolder.REDIS]
      */
     @Bean
     @ConditionalOnMissingBean
@@ -73,12 +70,12 @@ class StateHolderConfiguration {
 }
 
 /**
- * Условия, при которых создается бин [RamStateHolder]
+ * Conditions under which [RamStateHolder] bean is created
  */
 class RamStateHolderConditional : AnyNestedCondition(ConfigurationCondition.ConfigurationPhase.REGISTER_BEAN) {
 
     /**
-     * Случай по умолчанию, когда не задано значение ru.nsu.manasyan.ru.nsu.manasyan.kcache.state-holder в applications.yaml/properties
+     * Condition by default, when value of kcache.state-holder property in properties file wasn't set
      */
     @ConditionalOnProperty(
         matchIfMissing = true,
@@ -90,7 +87,7 @@ class RamStateHolderConditional : AnyNestedCondition(ConfigurationCondition.Conf
     }
 
     /**
-     * Случай, когда ru.nsu.manasyan.ru.nsu.manasyan.kcache.state-holder в applications.yaml/properties установлен как ram
+     * Condition, value of kcache.state-holder property in properties file was set as [KCacheProperties.StateHolder.RAM]
      */
     @ConditionalOnProperty(
         prefix = KCacheProperties.propertiesPrefix,

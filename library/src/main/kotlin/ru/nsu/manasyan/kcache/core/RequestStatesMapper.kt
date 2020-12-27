@@ -1,5 +1,10 @@
 package ru.nsu.manasyan.kcache.core
 
+/**
+ * Storage of HTTP-request handler methods' names and
+ * names of tables, on which the return value such method depends, mappings
+ */
+// TODO: rename state -> entity/table
 interface RequestStatesMapper {
     companion object {
         const val MAPPINGS_FILE_PATH = "requestStatesMapping.json"

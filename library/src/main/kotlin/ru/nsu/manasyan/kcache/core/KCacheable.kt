@@ -2,10 +2,14 @@ package ru.nsu.manasyan.kcache.core
 
 import kotlin.reflect.KClass
 
+// TODO: add description from aspect
+/**
+ * Enables HTTP-caching of request which was processing by current method
+ */
 @Target(AnnotationTarget.FUNCTION)
 annotation class KCacheable(
     /**
-     * Таблицы, состояние которых должно измениться при вызове аннотированного участка кода
+     * Tables on which the return value of the HTTP-request handler method depends
      */
     val tables: Array<String> = [],
 

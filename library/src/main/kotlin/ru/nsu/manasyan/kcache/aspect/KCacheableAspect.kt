@@ -23,16 +23,16 @@ class KCacheableAspect(
     private val logger by LoggerProperty()
 
     /**
-     * Функция вызываемая до методов контроллеров Спринга, помеченных аннотацией [KCacheable].
-     * В случае наличия значение HTTP-хедера If-None-Match в аргументах метода и совпадения
-     * его значения со значением вычисленного текущего ETag возвращается
-     * [ResponseEntity] с кодом 304 и пустым телом. Оборачиваемый метод при этом **не вызывается**.
+     * Wraps methods, which were annotated with [KCacheable].
+     * If the value of the If-None-Match HTTP header is present in the method arguments
+     * and its value matches the value of the calculated ETag, returns the [ResponseEntity] with status code 304
+     * and empty body. Meanwhile, the wrapped method is not called.
      *
-     * В случае, если в аргументах метода не найдено значение HTTP-хедера If-None-Match, т.е.
-     * аргумент, помеченный аннотацией [RequestHeader] со значением поля [RequestHeader.name]
-     * равным [HttpHeaders.IF_NONE_MATCH], или данный аргумент не совпадает с текущим ETag,
-     * то вызывается оборачиваемый метод и возвращается его результат ([ResponseEntity]), но
-     * с проставленным заголовком ETag, равным текущему значению ETag.
+     * If the HTTP header value If-None-Match is not found in the method arguments,
+     * i.e. the argument marked with the [RequestHeader] annotation with the field value [RequestHeader.name]
+     * equal to [HttpHeaders.IF_NONE_MATCH], or this argument does not match the current ETag,
+     * then the wrapped method is called and its result ([ResponseEntity]) is returned
+     * with the ETag header set to the current ETag value.
      */
     @Around("@annotation(ru.nsu.manasyan.kcache.core.KCacheable)")
     fun wrapKCacheableControllerMethod(joinPoint: ProceedingJoinPoint): ResponseEntity<*> {
@@ -56,21 +56,12 @@ class KCacheableAspect(
         ).withEtag(currentETag)
     }
 
+    // TODO: get RequestEntity from args instead of @RequestHeader
     /**
-     * If functionReturn is [ResponseEntity] returns it,
-     * otherwise wraps it in [ResponseEntity] with status code 200.
-     */
-    private fun getResponseEntity(functionReturn: Any): ResponseEntity<*> {
-        return when (functionReturn) {
-            is ResponseEntity<*> -> functionReturn
-            else -> ResponseEntity.ok(functionReturn)
-        }
-    }
-
-    /**
-     * Получение значения HTTP-заголовка If-None-Match из аргументов метода контроллера спринга.
-     * Т.е. аргумента, помеченного аннотацией [RequestHeader] со значением поля name равным [HttpHeaders.IF_NONE_MATCH]
-     * @return Значения такого аргумента, null если такой не обнаружен.
+     * Function extracts If-None-Match HTTP-header's value from method's arguments.
+     * i.e. argument, which was tagged with [RequestHeader] annotation with the name field value
+     * equal to [HttpHeaders.IF_NONE_MATCH].
+     * @return value of IF_NONE_MATCH argument, null if such not found.
      */
     private fun getEtagFromMethodArgs(method: Method, methodArgs: Array<Any>): String? {
         for ((currentParameter, parameterAnnotations) in method.parameterAnnotations.withIndex()) {
