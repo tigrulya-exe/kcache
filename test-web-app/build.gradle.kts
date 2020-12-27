@@ -16,10 +16,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.redisson:redisson:3.14.1")
+    implementation("com.google.code.gson:gson:2.8.6")
 
     implementation(project(":library"))
     kapt(project(":processor"))
 
+    testImplementation("com.natpryce:hamkrest:1.8.0.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
