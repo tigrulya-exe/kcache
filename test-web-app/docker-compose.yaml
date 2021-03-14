@@ -6,3 +6,13 @@ services:
       - "6379:6379"
     environment:
       - REDIS_REPLICATION_MODE=master
+
+  hazelcast_first:
+    image: "hazelcast/hazelcast"
+    ports:
+      - "5701:5701"
+
+  hazelcast_second:
+    image: "hazelcast/hazelcast"
+    ports:
+      - "5702:5701"
