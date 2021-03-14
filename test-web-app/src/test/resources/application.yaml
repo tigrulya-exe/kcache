@@ -1,0 +1,5 @@
+kcache:
+  state-holder: hazelcast
+  redis:
+    host: localhost
+    port: 6379

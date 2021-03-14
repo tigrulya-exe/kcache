@@ -16,7 +16,8 @@ class InjectStatesBeanPostProcessor(
         if (stateHolder !is StateHolder) {
             return stateHolder
         }
-        mapper.getAllStates().values
+        mapper.getAllStates()
+            .values
             .flatten()
             .distinct()
             .forEach {

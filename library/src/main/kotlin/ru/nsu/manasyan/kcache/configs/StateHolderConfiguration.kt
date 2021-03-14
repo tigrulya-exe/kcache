@@ -1,8 +1,9 @@
 package ru.nsu.manasyan.kcache.configs
 
+import com.hazelcast.core.Hazelcast
+import com.hazelcast.core.HazelcastInstance
 import org.redisson.Redisson
 import org.redisson.api.RedissonClient
-import org.redisson.config.Config
 import org.springframework.boot.autoconfigure.condition.AnyNestedCondition
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -12,10 +13,16 @@ import org.springframework.context.annotation.Conditional
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.ConfigurationCondition
 import ru.nsu.manasyan.kcache.core.StateHolder
+import ru.nsu.manasyan.kcache.defaults.HazelcastStateHolder
 import ru.nsu.manasyan.kcache.defaults.RamStateHolder
 import ru.nsu.manasyan.kcache.defaults.RedisStateHolder
+import ru.nsu.manasyan.kcache.properties.HazelcastProperties
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
+import ru.nsu.manasyan.kcache.properties.RedisProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
+
+import com.hazelcast.config.Config as HazelcastConfig
+import org.redisson.config.Config as RedissonConfig
 
 /**
  * Configuration rules for [StateHolder] beans
@@ -37,18 +44,57 @@ class StateHolderConfiguration {
         return RamStateHolder()
     }
 
-    // TODO: get address and other props from properties file
     @Bean
     @ConditionalOnProperty(
         prefix = KCacheProperties.propertiesPrefix,
         name = ["state-holder"],
         havingValue = "redis"
     )
-    fun redisClient(): RedissonClient {
+    fun redisClient(
+        properties: RedisProperties
+    ): RedissonClient {
         logger.debug("Building RedissonClient")
-        val config = Config()
-        config.useSingleServer().address = "redis://127.0.0.1:6379"
+        val config = RedissonConfig()
+        config.useSingleServer().address = "redis://${properties.host}:${properties.port}"
         return Redisson.create(config)
+    }
+
+    @Bean
+    @ConditionalOnProperty(
+        prefix = KCacheProperties.propertiesPrefix,
+        name = ["state-holder"],
+        havingValue = "hazelcast"
+    )
+    fun hazelcastClient(
+        properties: HazelcastProperties
+    ): HazelcastInstance {
+        logger.debug("Building HazelcastInstance")
+        val config = HazelcastConfig()
+        config.apply {
+            networkConfig.port = properties.port!!
+            networkConfig.publicAddress = properties.host
+        }
+        return Hazelcast.newHazelcastInstance()
+    }
+
+    /**
+     * Creates [HazelcastStateHolder] bean if kcache.state-holder
+     * property's value in properties file is [KCacheProperties.StateHolder.HAZELCAST]
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(HazelcastInstance::class)
+    @ConditionalOnProperty(
+        prefix = KCacheProperties.propertiesPrefix,
+        name = ["state-holder"],
+        havingValue = "hazelcast"
+    )
+    fun hazelcastStateHolder(
+        hazelcastClient: HazelcastInstance,
+        properties: HazelcastProperties
+    ): StateHolder {
+        logger.debug("Building HazelcastStateHolder")
+        return HazelcastStateHolder(hazelcastClient, properties)
     }
 
     /**
@@ -81,6 +127,7 @@ class RamStateHolderConditional : AnyNestedCondition(ConfigurationCondition.Conf
         matchIfMissing = true,
         prefix = KCacheProperties.propertiesPrefix,
         name = ["state-holder"],
+        // TODO: refactor
         havingValue = "never"
     )
     object DefaultStateHolderCondition {

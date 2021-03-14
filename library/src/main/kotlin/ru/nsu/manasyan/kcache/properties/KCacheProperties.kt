@@ -14,7 +14,8 @@ class KCacheProperties(
 
     enum class StateHolder {
         RAM,
-        REDIS
+        REDIS,
+        HAZELCAST
     }
     // TODO: add class for redis config
 }

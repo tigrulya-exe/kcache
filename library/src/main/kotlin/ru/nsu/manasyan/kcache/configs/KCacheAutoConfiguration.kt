@@ -14,7 +14,9 @@ import ru.nsu.manasyan.kcache.core.RequestStatesMapper
 import ru.nsu.manasyan.kcache.core.StateHolder
 import ru.nsu.manasyan.kcache.defaults.ConcatenateETagBuilder
 import ru.nsu.manasyan.kcache.defaults.RamRequestStatesMapper
+import ru.nsu.manasyan.kcache.properties.HazelcastProperties
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
+import ru.nsu.manasyan.kcache.properties.RedisProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
 /**
@@ -22,7 +24,14 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
  */
 @Configuration
 @Import(StateHolderConfiguration::class)
-@EnableConfigurationProperties(KCacheProperties::class)
+// TODO: refactor
+@EnableConfigurationProperties(
+    value = [
+        KCacheProperties::class,
+        RedisProperties::class,
+        HazelcastProperties::class
+    ]
+)
 class KCacheAutoConfiguration {
     private val logger by LoggerProperty()
 
