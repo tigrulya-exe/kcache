@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class UpdateState(
+annotation class KCacheEvict(
 
     /**
      * Tables, whose state should change when annotated code section will be called

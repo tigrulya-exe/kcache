@@ -2,12 +2,12 @@ package ru.nsu.manasyan.kcache.aspect
 
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.http.ResponseEntity
-import ru.nsu.manasyan.kcache.core.RequestStatesMapper
+import ru.nsu.manasyan.kcache.core.RequestStatesMappings
 import java.lang.reflect.Method
 
 /**
  * @return annotation of type T that is present on this method
- * or null if such annotation not found
+ * or null if such annotation was not found
  */
 inline fun <reified T> getAnnotationInstance(method: Method): T? {
     return method.annotations
@@ -21,10 +21,10 @@ inline fun <reified T> getAnnotationInstance(method: Method): T? {
  * If functionReturn is [ResponseEntity] returns it,
  * otherwise wraps it in [ResponseEntity] with status code 200.
  */
-fun getResponseEntity(functionReturn: Any): ResponseEntity<*> {
-    return when (functionReturn) {
-        is ResponseEntity<*> -> functionReturn
-        else -> ResponseEntity.ok(functionReturn)
+fun getResponseEntity(functionResult: Any): ResponseEntity<*> {
+    return when (functionResult) {
+        is ResponseEntity<*> -> functionResult
+        else -> ResponseEntity.ok(functionResult)
     }
 }
 
@@ -44,7 +44,7 @@ fun MethodSignature.getMethodName(): String {
     }.toString()
 }
 
-fun RequestStatesMapper.getRequestStates(
+fun RequestStatesMappings.getRequestStates(
     methodSignature: MethodSignature
 ): List<String> {
     return getRequestStates(methodSignature.getMethodName())

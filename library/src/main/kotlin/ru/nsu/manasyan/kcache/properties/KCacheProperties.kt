@@ -17,5 +17,4 @@ class KCacheProperties(
         REDIS,
         HAZELCAST
     }
-    // TODO: add class for redis config
 }

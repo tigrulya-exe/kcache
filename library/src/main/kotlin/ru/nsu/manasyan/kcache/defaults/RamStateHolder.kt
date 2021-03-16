@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
 /**
- * DB tables' states storage in RAM
+ * DB tables' states storage in RAM. Only for single instance usage.
  */
 class RamStateHolder : StateHolder {
     private val logger by LoggerProperty()

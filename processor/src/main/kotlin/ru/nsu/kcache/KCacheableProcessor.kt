@@ -3,8 +3,8 @@ package ru.nsu.kcache
 import com.google.auto.service.AutoService
 import com.google.gson.Gson
 import ru.nsu.manasyan.kcache.core.KCacheable
-import ru.nsu.manasyan.kcache.core.RequestStatesMapper
-import ru.nsu.manasyan.kcache.defaults.RamRequestStatesMapper
+import ru.nsu.manasyan.kcache.core.RequestStatesMappings
+import ru.nsu.manasyan.kcache.defaults.RamRequestStatesMappings
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ElementKind
@@ -26,7 +26,7 @@ class KCacheableProcessor : AbstractProcessor() {
 
     private lateinit var elementUtils: Elements
 
-    private val mapper = RamRequestStatesMapper()
+    private val mappings = RamRequestStatesMappings()
 
     private val gson = Gson()
 
@@ -42,7 +42,7 @@ class KCacheableProcessor : AbstractProcessor() {
         mappingsFile = filer.createResource(
             StandardLocation.CLASS_OUTPUT,
             MAPPINGS_FILE_PREFIX,
-            RequestStatesMapper.MAPPINGS_FILE_PATH
+            RequestStatesMappings.MAPPINGS_FILE_PATH
         )
     }
 
@@ -55,7 +55,7 @@ class KCacheableProcessor : AbstractProcessor() {
                     element.enclosingElement as TypeElement
                 )
                 element.getAnnotation(KCacheable::class.java)?.let {
-                    mapper.setRequestStates(
+                    mappings.setRequestStates(
                         "$enclosingName.$element",
                         it.tables.asList()
                     )
@@ -67,7 +67,7 @@ class KCacheableProcessor : AbstractProcessor() {
         }
 
         mappingsFile.openWriter().use {
-            it.write(gson.toJson(mapper))
+            it.write(gson.toJson(mappings))
         }
 
         return true

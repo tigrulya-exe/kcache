@@ -3,7 +3,7 @@ package com.example.app.service
 import com.example.app.data.TestUser
 import com.example.app.repository.TestUserRepository
 import org.springframework.stereotype.Service
-import ru.nsu.manasyan.kcache.core.UpdateState
+import ru.nsu.manasyan.kcache.core.KCacheEvict
 
 @Service
 class TestUserService(
@@ -13,7 +13,7 @@ class TestUserService(
         return repository.getUsers()
     }
 
-    @UpdateState(tables = ["users"])
+    @KCacheEvict(tables = ["users"])
     fun addUser(user: TestUser) {
         repository.addUser(user)
     }

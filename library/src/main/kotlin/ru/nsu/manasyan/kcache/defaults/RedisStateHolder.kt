@@ -4,7 +4,7 @@ import org.redisson.api.RedissonClient
 import ru.nsu.manasyan.kcache.core.StateHolder
 
 /**
- * DB tables' states storage in Redis
+ * DB tables' states storage in Redis. Only for single instance usage.
  */
 class RedisStateHolder(
     private val redissonClient: RedissonClient

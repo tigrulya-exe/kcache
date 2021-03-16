@@ -1,22 +1,22 @@
 package ru.nsu.manasyan.kcache.configs
 
 import org.springframework.beans.factory.config.BeanPostProcessor
-import ru.nsu.manasyan.kcache.core.RequestStatesMapper
+import ru.nsu.manasyan.kcache.core.RequestStatesMappings
 import ru.nsu.manasyan.kcache.core.StateHolder
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 /**
- * BeanPostProcessor, which injects initial states of all tables from [RequestStatesMapper] to [StateHolder].
+ * BeanPostProcessor, which injects initial states of all table states from [RequestStatesMappings] to [StateHolder].
  */
-class InjectStatesBeanPostProcessor(
-    private val mapper: RequestStatesMapper
+class InjectRequestStatesMappingsBeanPostProcessor(
+    private val mappings: RequestStatesMappings
 ) : BeanPostProcessor {
     override fun postProcessAfterInitialization(stateHolder: Any, beanName: String): Any? {
         if (stateHolder !is StateHolder) {
             return stateHolder
         }
-        mapper.getAllStates()
+        mappings.getAllStates()
             .values
             .flatten()
             .distinct()

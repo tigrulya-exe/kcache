@@ -9,6 +9,7 @@ import ru.nsu.manasyan.kcache.exceptions.UnknownTableIdException
  */
 class ConcatenateETagBuilder(override val stateHolder: StateHolder) : ETagBuilder {
     companion object {
+        // TODO: get value from application.yaml
         const val DEFAULT_SEPARATOR = ":"
     }
 

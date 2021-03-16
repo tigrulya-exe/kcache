@@ -5,7 +5,7 @@ package ru.nsu.manasyan.kcache.core
  * names of tables, on which the return value such method depends, mappings
  */
 // TODO: rename state -> entity/table
-interface RequestStatesMapper {
+interface RequestStatesMappings {
     companion object {
         const val MAPPINGS_FILE_PATH = "requestStatesMapping.json"
     }
