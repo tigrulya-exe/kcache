@@ -7,11 +7,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import ru.nsu.manasyan.kcache.aspect.KCacheableAspect
 import ru.nsu.manasyan.kcache.aspect.KCacheEvictAspect
-import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
+import ru.nsu.manasyan.kcache.aspect.KCacheableAspect
 import ru.nsu.manasyan.kcache.core.etag.builder.ConcatenateETagBuilder
+import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
+import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
 import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
+import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
 import ru.nsu.manasyan.kcache.core.state.requestmapping.RamRequestStatesMappings
 import ru.nsu.manasyan.kcache.core.state.requestmapping.RequestStatesMappings
 import ru.nsu.manasyan.kcache.properties.HazelcastProperties
@@ -23,7 +25,13 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
  * Auto configuration class for SpringBoot starter
  */
 @Configuration
-@Import(StateHolderConfiguration::class)
+@Import(
+    value = [
+        StateHolderConfiguration::class,
+        ETagExtractorConfiguration::class,
+        StateProviderConfiguration::class
+    ]
+)
 // TODO: refactor
 @EnableConfigurationProperties(
     value = [
@@ -57,9 +65,13 @@ class KCacheAutoConfiguration {
     @Bean
     @ConditionalOnBean(value = [RequestStatesMappings::class])
     fun injectStatesBeanPostProcessor(
-        requestStatesMappings: RequestStatesMappings
+        requestStatesMappings: RequestStatesMappings,
+        newStateProvider: NewStateProvider
     ): InjectRequestStatesMappingsBeanPostProcessor {
-        return InjectRequestStatesMappingsBeanPostProcessor(requestStatesMappings)
+        return InjectRequestStatesMappingsBeanPostProcessor(
+            requestStatesMappings,
+            newStateProvider
+        )
     }
 
     /**
@@ -83,10 +95,15 @@ class KCacheAutoConfiguration {
     @ConditionalOnBean(value = [StateHolder::class, ETagBuilder::class])
     fun kCacheAspect(
         eTagBuilder: ETagBuilder,
+        extractor: IfNoneMatchHeaderExtractor,
         requestStatesMappings: RequestStatesMappings
     ): KCacheableAspect {
         logger.debug("Building KCacheAspect")
-        return KCacheableAspect(eTagBuilder, requestStatesMappings)
+        return KCacheableAspect(
+            eTagBuilder,
+            extractor,
+            requestStatesMappings
+        )
     }
 
     /**
@@ -95,11 +112,12 @@ class KCacheAutoConfiguration {
      */
     @Bean
     @ConditionalOnBean(value = [StateHolder::class, ETagBuilder::class])
-    fun updateStateAspect(
+    fun kCacheEvictAspect(
         stateHolder: StateHolder,
+        newStateProvider: NewStateProvider
     ): KCacheEvictAspect {
-        logger.debug("Building UpdateStateAspect")
-        return KCacheEvictAspect(stateHolder)
+        logger.debug("Building KCacheEvictAspect")
+        return KCacheEvictAspect(stateHolder, newStateProvider)
     }
 
 }

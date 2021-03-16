@@ -21,6 +21,11 @@ class TestController(private val service: TestUserService) {
         )
     }
 
+    @GetMapping("/evict")
+    fun evictUsersCache() {
+        service.evictUsersCache()
+    }
+
     @PostMapping("/users")
     fun addUser(@RequestBody user: TestUser) {
         service.addUser(user)

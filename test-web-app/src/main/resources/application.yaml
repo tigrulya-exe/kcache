@@ -3,7 +3,6 @@ kcache:
   state-holder: hazelcast
 logging:
   level:
-    #    root: Debug
     ru:
       nsu:
         manasyan:

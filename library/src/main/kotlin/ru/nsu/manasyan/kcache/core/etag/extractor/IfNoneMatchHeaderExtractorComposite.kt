@@ -4,7 +4,7 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
 import java.lang.reflect.Method
 
 class IfNoneMatchHeaderExtractorComposite(
-    val extractors: MutableList<IfNoneMatchHeaderExtractor> = mutableListOf()
+    private val extractors: List<IfNoneMatchHeaderExtractor>
 ) : IfNoneMatchHeaderExtractor {
     private val logger by LoggerProperty()
 

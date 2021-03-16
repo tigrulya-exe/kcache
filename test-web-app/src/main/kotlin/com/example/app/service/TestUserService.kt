@@ -17,4 +17,7 @@ class TestUserService(
     fun addUser(user: TestUser) {
         repository.addUser(user)
     }
+
+    @KCacheEvict(tables = ["users"])
+    fun evictUsersCache() {}
 }
