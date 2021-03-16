@@ -1,14 +1,13 @@
-package ru.nsu.manasyan.kcache.core
+package ru.nsu.manasyan.kcache.core.state.updater
+
+import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
 
 /**
  * Entity which updates current states of DB tables
  */
 interface StateUpdater {
-    // TODO: We should inject current DB state into all StateUpdaters
     val stateHolder: StateHolder
 
-
-    // TODO: mb remove
     fun updateState(tableId: String, state: String) {
         stateHolder.setState(tableId, state)
     }

@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.configs
+package ru.nsu.manasyan.kcache.config
 
 import com.hazelcast.core.Hazelcast
 import com.hazelcast.core.HazelcastInstance
@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Conditional
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.ConfigurationCondition
-import ru.nsu.manasyan.kcache.core.StateHolder
-import ru.nsu.manasyan.kcache.defaults.HazelcastStateHolder
-import ru.nsu.manasyan.kcache.defaults.RamStateHolder
-import ru.nsu.manasyan.kcache.defaults.RedisStateHolder
+import ru.nsu.manasyan.kcache.core.state.holder.HazelcastStateHolder
+import ru.nsu.manasyan.kcache.core.state.holder.RamStateHolder
+import ru.nsu.manasyan.kcache.core.state.holder.RedisStateHolder
+import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
 import ru.nsu.manasyan.kcache.properties.HazelcastProperties
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.properties.RedisProperties

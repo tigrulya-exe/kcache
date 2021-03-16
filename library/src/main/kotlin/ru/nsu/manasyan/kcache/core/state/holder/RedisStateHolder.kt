@@ -1,7 +1,6 @@
-package ru.nsu.manasyan.kcache.defaults
+package ru.nsu.manasyan.kcache.core.state.holder
 
 import org.redisson.api.RedissonClient
-import ru.nsu.manasyan.kcache.core.StateHolder
 
 /**
  * DB tables' states storage in Redis. Only for single instance usage.

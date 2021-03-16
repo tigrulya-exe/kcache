@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.configs
+package ru.nsu.manasyan.kcache.config
 
 import com.google.gson.Gson
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import ru.nsu.manasyan.kcache.aspect.KCacheableAspect
 import ru.nsu.manasyan.kcache.aspect.KCacheEvictAspect
-import ru.nsu.manasyan.kcache.core.ETagBuilder
-import ru.nsu.manasyan.kcache.core.RequestStatesMappings
-import ru.nsu.manasyan.kcache.core.StateHolder
-import ru.nsu.manasyan.kcache.defaults.ConcatenateETagBuilder
-import ru.nsu.manasyan.kcache.defaults.RamRequestStatesMappings
+import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
+import ru.nsu.manasyan.kcache.core.etag.builder.ConcatenateETagBuilder
+import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
+import ru.nsu.manasyan.kcache.core.state.requestmapping.RamRequestStatesMappings
+import ru.nsu.manasyan.kcache.core.state.requestmapping.RequestStatesMappings
 import ru.nsu.manasyan.kcache.properties.HazelcastProperties
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.properties.RedisProperties

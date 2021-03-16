@@ -5,7 +5,7 @@ import com.example.app.service.TestUserService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import ru.nsu.manasyan.kcache.core.KCacheable
+import ru.nsu.manasyan.kcache.core.annotations.KCacheable
 
 @RequestMapping("/test")
 @RestController

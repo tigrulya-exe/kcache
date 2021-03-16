@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.core
+package ru.nsu.manasyan.kcache.core.state.holder
 
 /**
  * Entity, which contains information about current DB tables state

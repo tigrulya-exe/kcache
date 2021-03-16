@@ -1,8 +1,7 @@
-package ru.nsu.manasyan.kcache.defaults
+package ru.nsu.manasyan.kcache.core.state.holder
 
 import com.hazelcast.core.HazelcastInstance
 import com.hazelcast.replicatedmap.ReplicatedMap
-import ru.nsu.manasyan.kcache.core.StateHolder
 import ru.nsu.manasyan.kcache.properties.HazelcastProperties
 
 class HazelcastStateHolder(

@@ -2,7 +2,7 @@ package ru.nsu.manasyan.kcache.aspect
 
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.http.ResponseEntity
-import ru.nsu.manasyan.kcache.core.RequestStatesMappings
+import ru.nsu.manasyan.kcache.core.state.requestmapping.RequestStatesMappings
 import java.lang.reflect.Method
 
 /**

@@ -3,7 +3,7 @@ package com.example.app.service
 import com.example.app.data.TestUser
 import com.example.app.repository.TestUserRepository
 import org.springframework.stereotype.Service
-import ru.nsu.manasyan.kcache.core.KCacheEvict
+import ru.nsu.manasyan.kcache.core.annotations.KCacheEvict
 
 @Service
 class TestUserService(

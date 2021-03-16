@@ -1,6 +1,5 @@
-package ru.nsu.manasyan.kcache.defaults
+package ru.nsu.manasyan.kcache.core.state.holder
 
-import ru.nsu.manasyan.kcache.core.StateHolder
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap

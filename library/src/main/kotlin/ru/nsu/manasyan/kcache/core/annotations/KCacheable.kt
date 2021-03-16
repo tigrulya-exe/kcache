@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.core
+package ru.nsu.manasyan.kcache.core.annotations
 
 import kotlin.reflect.KClass
 

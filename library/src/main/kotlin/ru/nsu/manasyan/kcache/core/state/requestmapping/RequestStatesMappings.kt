@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.core
+package ru.nsu.manasyan.kcache.core.state.requestmapping
 
 /**
  * Storage of HTTP-request handler methods' names and

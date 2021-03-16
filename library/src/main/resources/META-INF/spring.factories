@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  ru.nsu.manasyan.kcache.configs.KCacheAutoConfiguration
+  ru.nsu.manasyan.kcache.config.KCacheAutoConfiguration

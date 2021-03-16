@@ -1,6 +1,5 @@
-package ru.nsu.manasyan.kcache.defaults
+package ru.nsu.manasyan.kcache.core.state.requestmapping
 
-import ru.nsu.manasyan.kcache.core.RequestStatesMappings
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 

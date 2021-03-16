@@ -1,4 +1,6 @@
-package ru.nsu.manasyan.kcache.core
+package ru.nsu.manasyan.kcache.core.etag.builder
+
+import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
 
 /**
  *
