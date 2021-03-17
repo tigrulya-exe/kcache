@@ -1,8 +1,7 @@
 package ru.nsu.manasyan.kcache.aspect
 
 import org.aspectj.lang.reflect.MethodSignature
-import org.springframework.http.ResponseEntity
-import ru.nsu.manasyan.kcache.core.state.requestmapping.RequestStatesMappings
+import ru.nsu.manasyan.kcache.core.handler.RequestStatesMappings
 import java.lang.reflect.Method
 
 /**
@@ -15,17 +14,6 @@ inline fun <reified T> getAnnotationInstance(method: Method): T? {
         .ifEmpty {
             return null
         }[0]
-}
-
-/**
- * If functionReturn is [ResponseEntity] returns it,
- * otherwise wraps it in [ResponseEntity] with status code 200.
- */
-fun getResponseEntity(functionResult: Any): ResponseEntity<*> {
-    return when (functionResult) {
-        is ResponseEntity<*> -> functionResult
-        else -> ResponseEntity.ok(functionResult)
-    }
 }
 
 /**

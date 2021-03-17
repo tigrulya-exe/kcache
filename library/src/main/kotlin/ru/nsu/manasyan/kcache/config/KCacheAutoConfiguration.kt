@@ -14,8 +14,8 @@ import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
 import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
-import ru.nsu.manasyan.kcache.core.state.requestmapping.RamRequestStatesMappings
-import ru.nsu.manasyan.kcache.core.state.requestmapping.RequestStatesMappings
+import ru.nsu.manasyan.kcache.core.handler.RamRequestStatesMappings
+import ru.nsu.manasyan.kcache.core.handler.RequestStatesMappings
 import ru.nsu.manasyan.kcache.properties.HazelcastProperties
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.properties.RedisProperties

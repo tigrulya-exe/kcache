@@ -3,7 +3,7 @@ package ru.nsu.manasyan.kcache.config
 import org.springframework.beans.factory.config.BeanPostProcessor
 import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
-import ru.nsu.manasyan.kcache.core.state.requestmapping.RequestStatesMappings
+import ru.nsu.manasyan.kcache.core.handler.RequestStatesMappings
 
 /**
  * BeanPostProcessor, which injects initial states of all table states from [RequestStatesMappings] to [StateHolder].

@@ -1,5 +1,9 @@
 package ru.nsu.manasyan.kcache.core.annotations
 
+import ru.nsu.manasyan.kcache.core.resultbuilder.hit.KCacheHitResultBuilder
+import ru.nsu.manasyan.kcache.core.resultbuilder.hit.ResponseEntityCacheHitResultBuilder
+import ru.nsu.manasyan.kcache.core.resultbuilder.miss.KCacheMissResultBuilder
+import ru.nsu.manasyan.kcache.core.resultbuilder.miss.ResponseEntityCacheMissResultBuilder
 import kotlin.reflect.KClass
 
 // TODO: add description from aspect
@@ -12,6 +16,12 @@ annotation class KCacheable(
      * Tables on which the return value of the HTTP-request handler method depends
      */
     val tables: Array<String> = [],
+
+    val onCacheHitResultBuilder: KClass<out KCacheHitResultBuilder<*>> =
+        ResponseEntityCacheHitResultBuilder::class,
+
+    val onCacheMissResultBuilder: KClass<out KCacheMissResultBuilder<*, *>> =
+        ResponseEntityCacheMissResultBuilder::class,
 
     /**
      * TODO: временное решение

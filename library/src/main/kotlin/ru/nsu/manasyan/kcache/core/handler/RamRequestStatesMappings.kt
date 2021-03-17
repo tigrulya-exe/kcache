@@ -1,11 +1,11 @@
-package ru.nsu.manasyan.kcache.core.state.requestmapping
+package ru.nsu.manasyan.kcache.core.handler
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
 /**
  * Storage of HTTP-request handler methods' names and
- * names of tables, on which the return value such method depends, mappings located in RAM
+ * request metadata mappings located in RAM
  */
 class RamRequestStatesMappings : RequestStatesMappings {
     private val statesMapping: ConcurrentMap<String, List<String>> = ConcurrentHashMap()

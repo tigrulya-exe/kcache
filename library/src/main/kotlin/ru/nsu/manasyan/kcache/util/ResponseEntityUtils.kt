@@ -27,5 +27,9 @@ class EtagResponseBuilder {
                 .eTag(eTag)
                 .build<Any>()
         }
+
+        fun empty(): ResponseEntity<*> {
+            return ResponseEntity<Any?>(HttpStatus.OK)
+        }
     }
 }

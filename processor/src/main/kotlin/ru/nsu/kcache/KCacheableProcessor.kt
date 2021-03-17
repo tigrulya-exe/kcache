@@ -3,8 +3,8 @@ package ru.nsu.kcache
 import com.google.auto.service.AutoService
 import com.google.gson.Gson
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
-import ru.nsu.manasyan.kcache.core.state.requestmapping.RamRequestStatesMappings
-import ru.nsu.manasyan.kcache.core.state.requestmapping.RequestStatesMappings
+import ru.nsu.manasyan.kcache.core.handler.RamRequestStatesMappings
+import ru.nsu.manasyan.kcache.core.handler.RequestStatesMappings
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ElementKind

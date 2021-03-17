@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestHeader
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
-import ru.nsu.manasyan.kcache.core.state.requestmapping.RequestStatesMappings
+import ru.nsu.manasyan.kcache.core.handler.RequestStatesMappings
 import ru.nsu.manasyan.kcache.util.EtagResponseBuilder
 import ru.nsu.manasyan.kcache.util.LoggerProperty
-import ru.nsu.manasyan.kcache.util.withEtag
 
 @Aspect
 class KCacheableAspect(
@@ -57,7 +56,7 @@ class KCacheableAspect(
                     "Previous[$previousETag]. Invoking method."
         )
 
-        return getResponseEntity(
+        return wrapInResponseEntity(
             joinPoint.proceed()
         ).withEtag(currentETag)
     }
