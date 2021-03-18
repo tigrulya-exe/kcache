@@ -20,7 +20,7 @@ annotation class KCacheable(
     val onCacheHitResultBuilder: KClass<out KCacheHitResultBuilder<*>> =
         ResponseEntityCacheHitResultBuilder::class,
 
-    val onCacheMissResultBuilder: KClass<out KCacheMissResultBuilder<*, *>> =
+    val onCacheMissResultBuilder: KClass<out KCacheMissResultBuilder<*>> =
         ResponseEntityCacheMissResultBuilder::class,
 
     /**

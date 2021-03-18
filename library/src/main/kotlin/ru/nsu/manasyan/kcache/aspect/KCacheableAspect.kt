@@ -7,18 +7,19 @@ import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
-import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
+import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
-import ru.nsu.manasyan.kcache.core.handler.RequestStatesMappings
-import ru.nsu.manasyan.kcache.util.EtagResponseBuilder
+import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadata
+import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadataContainer
 import ru.nsu.manasyan.kcache.util.LoggerProperty
+import kotlin.reflect.full.createInstance
 
 @Aspect
 class KCacheableAspect(
     private val eTagBuilder: ETagBuilder,
     private val headerExtractor: IfNoneMatchHeaderExtractor,
-    private val requestStatesMappings: RequestStatesMappings
+    private val requestHandlerMetadataContainer: RequestHandlerMetadataContainer
 ) {
     private val logger by LoggerProperty()
 
@@ -35,29 +36,47 @@ class KCacheableAspect(
      * with the ETag header set to the current ETag value.
      */
     @Around("@annotation(ru.nsu.manasyan.kcache.core.annotations.KCacheable)")
-    fun wrapKCacheableControllerMethod(joinPoint: ProceedingJoinPoint): ResponseEntity<*> {
+    fun wrapKCacheableControllerMethod(joinPoint: ProceedingJoinPoint): Any? {
         val methodSignature = joinPoint.signature as MethodSignature
+        val currentMetadata = requestHandlerMetadataContainer.getMetadata(methodSignature)
+
         val currentETag = eTagBuilder.buildETag(
-            requestStatesMappings.getRequestStates(methodSignature)
+            getTableStates(currentMetadata)
         )
         val previousETag = headerExtractor.extract(
             methodSignature.method,
             joinPoint.args
         )
 
-        val methodName = methodSignature.getMethodName()
         if (currentETag == previousETag) {
-            logger.debug("Equal ETags for method ${methodName}: $currentETag, returning 304")
-            return EtagResponseBuilder.notModified(currentETag)
+            logger.atDebug()
+                .addArgument(methodSignature.getMethodName())
+                .log("Equal ETags for method {}: $currentETag, returning 304")
+            return getOnCacheHitResultBuilder(currentMetadata)
+                .build(currentETag)
         }
 
-        logger.debug(
-            "Different ETags for method ${methodName}: Current [$currentETag] " +
-                    "Previous[$previousETag]. Invoking method."
-        )
+        logger.atDebug()
+            .addArgument(methodSignature.getMethodName())
+            .log(
+                "Different ETags for method {}: Current [$currentETag] Previous[$previousETag]. Invoking method."
+            )
 
-        return wrapInResponseEntity(
-            joinPoint.proceed()
-        ).withEtag(currentETag)
+        return getOnCacheMissResultBuilder(currentMetadata)
+            .build(joinPoint.proceed(), currentETag)
     }
+
+    private fun getTableStates(metadata: RequestHandlerMetadata) =
+        metadata.tableStates.ifEmpty {
+            throw IllegalArgumentException("KCacheable annotation should contain at list 1 table")
+        }
+
+    // TODO: mb refactor (store class objects in BuilderLocator (map <className, object>)) or add cache
+    private fun getOnCacheHitResultBuilder(metadata: RequestHandlerMetadata) = metadata
+        .onCacheHitResultBuilder
+        .createInstance()
+
+    private fun getOnCacheMissResultBuilder(metadata: RequestHandlerMetadata) = metadata
+        .onCacheMissResultBuilder
+        .createInstance()
 }

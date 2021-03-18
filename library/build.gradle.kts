@@ -16,11 +16,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    // TODO: replace jackson with gson
-    implementation ("com.google.code.gson:gson:2.8.6")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.redisson:redisson:3.14.1")
+
+    implementation("org.slf4j:slf4j-api:2.0.0-alpha1")
+
 
     implementation("com.hazelcast:hazelcast:4.1.1")
 

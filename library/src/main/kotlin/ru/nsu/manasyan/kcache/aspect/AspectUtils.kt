@@ -1,7 +1,8 @@
 package ru.nsu.manasyan.kcache.aspect
 
 import org.aspectj.lang.reflect.MethodSignature
-import ru.nsu.manasyan.kcache.core.handler.RequestStatesMappings
+import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadata
+import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadataContainer
 import java.lang.reflect.Method
 
 /**
@@ -32,9 +33,10 @@ fun MethodSignature.getMethodName(): String {
     }.toString()
 }
 
-fun RequestStatesMappings.getRequestStates(
+fun RequestHandlerMetadataContainer.getMetadata(
     methodSignature: MethodSignature
-): List<String> {
-    return getRequestStates(methodSignature.getMethodName())
-        ?: throw IllegalArgumentException("KCacheable annotation should contain at list 1 table")
+): RequestHandlerMetadata {
+    return methodSignature.getMethodName().let { name ->
+        getMetadata(name) ?: throw IllegalArgumentException("Wrong method name: $name")
+    }
 }

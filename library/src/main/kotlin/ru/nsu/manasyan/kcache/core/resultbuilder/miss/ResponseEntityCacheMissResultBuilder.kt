@@ -4,8 +4,8 @@ import org.springframework.http.ResponseEntity
 import ru.nsu.manasyan.kcache.util.EtagResponseBuilder
 import ru.nsu.manasyan.kcache.util.withEtag
 
-class ResponseEntityCacheMissResultBuilder<S> : KCacheMissResultBuilder<S, ResponseEntity<*>> {
-    override fun build(functionResult: S?, currentETag: String): ResponseEntity<*> = wrapInResponseEntity(
+class ResponseEntityCacheMissResultBuilder : KCacheMissResultBuilder<ResponseEntity<*>> {
+    override fun build(functionResult: Any?, currentETag: String): ResponseEntity<*> = wrapInResponseEntity(
         functionResult
     ).withEtag(currentETag)
 
