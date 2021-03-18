@@ -1,23 +1,24 @@
 package ru.nsu.kcache
 
 import com.google.auto.service.AutoService
-import com.google.gson.Gson
+import ru.nsu.kcache.creator.HandlerMetadataContainerCreator
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
-import ru.nsu.manasyan.kcache.core.handler.RamRequestStatesMappings
-import ru.nsu.manasyan.kcache.core.handler.RequestStatesMappings
+import java.nio.file.Path
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.util.Elements
-import javax.tools.FileObject
-import javax.tools.StandardLocation
+import javax.tools.Diagnostic
+
+typealias KCacheableMetadata = MutableMap<String, RequestHandlerMetadata>
 
 @AutoService(Processor::class)
 class KCacheableProcessor : AbstractProcessor() {
 
     companion object {
-        private const val MAPPINGS_FILE_PREFIX = ""
+        private const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
     }
 
     private lateinit var messager: Messager
@@ -26,11 +27,9 @@ class KCacheableProcessor : AbstractProcessor() {
 
     private lateinit var elementUtils: Elements
 
-    private val mappings = RamRequestStatesMappings()
+    private val kCacheableMetadata: KCacheableMetadata = mutableMapOf()
 
-    private val gson = Gson()
-
-    private lateinit var mappingsFile: FileObject
+    private val metadataCreator = HandlerMetadataContainerCreator()
 
     @Synchronized
     override fun init(processingEnv: ProcessingEnvironment) {
@@ -38,39 +37,76 @@ class KCacheableProcessor : AbstractProcessor() {
         messager = processingEnv.messager
         filer = processingEnv.filer
         elementUtils = processingEnv.elementUtils
+    }
 
-        mappingsFile = filer.createResource(
-            StandardLocation.CLASS_OUTPUT,
-            MAPPINGS_FILE_PREFIX,
-            RequestStatesMappings.MAPPINGS_FILE_PATH
-        )
+    private fun getOnCacheHitResultBuilderClassName(annotation: KCacheable) =
+        getAnnotationValueClassName(annotation) { onCacheHitResultBuilder }
+
+    private fun getOnCacheMissResultBuilderClassName(annotation: KCacheable) =
+        getAnnotationValueClassName(annotation) { onCacheMissResultBuilder }
+
+    // dirty hack from stackoverflow ¯\_(ツ)_/¯
+    private fun getAnnotationValueClassName(
+        annotation: KCacheable,
+        action: KCacheable.() -> Unit
+    ): String? {
+        try {
+            annotation.action()
+        } catch (mte: MirroredTypeException) {
+            return (processingEnv.typeUtils.asElement(
+                mte.typeMirror
+            ) as TypeElement).qualifiedName.toString()
+        }
+        return null
+    }
+
+    private fun createMetadataContainerClass() {
+        val kaptDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
+        metadataCreator
+            .create(kCacheableMetadata)
+            .writeTo(
+                Path.of(
+                    kaptDir, metadataCreator.handlerMetadataClassName
+                )
+            )
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        roundEnv.getElementsAnnotatedWith(KCacheable::class.java)
-            ?.filter { it.kind == ElementKind.METHOD }
-            ?.forEach { element ->
-                val enclosingName = elementUtils.getBinaryName(
-                    // we know that element's kind is method
-                    element.enclosingElement as TypeElement
-                )
-                element.getAnnotation(KCacheable::class.java)?.let {
-                    mappings.setRequestStates(
-                        "$enclosingName.$element",
-                        it.tables.asList()
+        runCatching {
+            roundEnv.getElementsAnnotatedWith(KCacheable::class.java)
+                ?.filter { it.kind == ElementKind.METHOD }
+                ?.forEach { element ->
+                    val enclosingName = elementUtils.getBinaryName(
+                        // we know that element's kind is method
+                        element.enclosingElement as TypeElement
                     )
+
+                    element.getAnnotation(KCacheable::class.java)?.let {
+                        kCacheableMetadata["$enclosingName.$element"] = RequestHandlerMetadata(
+                            tableStates = it.tables.asList(),
+                            onCacheHitResultBuilder = getOnCacheHitResultBuilderClassName(it)!!,
+                            onCacheMissResultBuilder = getOnCacheMissResultBuilderClassName(it)!!
+                        )
+                    }
                 }
+
+            if (!roundEnv.processingOver()) {
+                return false
             }
 
-        if (!roundEnv.processingOver()) {
-            return false
+            createMetadataContainerClass()
+            return true
+        }.onFailure { exception ->
+            messager.printMessage(
+                Diagnostic.Kind.ERROR,
+                "[KCacheProcessor] Error during processing: ${exception.localizedMessage}"
+            )
+            messager.printMessage(
+                Diagnostic.Kind.ERROR,
+                exception.stackTrace.joinToString("\n")
+            )
         }
-
-        mappingsFile.openWriter().use {
-            it.write(gson.toJson(mappings))
-        }
-
-        return true
+        return false
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
