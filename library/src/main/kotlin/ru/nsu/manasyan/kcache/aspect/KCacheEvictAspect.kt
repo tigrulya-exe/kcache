@@ -24,8 +24,8 @@ class KCacheEvictAspect(
     fun wrapKCacheEvictMethod(joinPoint: JoinPoint) {
         val method = (joinPoint.signature as MethodSignature).method
         // we know, that method has KCacheEvict annotation
+        // TODO: mb get tables from generated container as well as in KCacheable
         val updatedTables = getAnnotationInstance<KCacheEvict>(method)!!.tables
-
         updatedTables.forEach { tableName ->
             val newState = newStateProvider.provide(tableName)
             stateHolder.setState(tableName, newState)

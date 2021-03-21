@@ -11,15 +11,14 @@ import ru.nsu.manasyan.kcache.core.annotations.KCacheable
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
 import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadata
-import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadataContainer
 import ru.nsu.manasyan.kcache.util.LoggerProperty
+import ru.nsu.manasyan.kcache.util.ifDebug
 import kotlin.reflect.full.createInstance
 
 @Aspect
 class KCacheableAspect(
     private val eTagBuilder: ETagBuilder,
     private val headerExtractor: IfNoneMatchHeaderExtractor,
-    private val requestHandlerMetadataContainer: RequestHandlerMetadataContainer
 ) {
     private val logger by LoggerProperty()
 
@@ -38,10 +37,14 @@ class KCacheableAspect(
     @Around("@annotation(ru.nsu.manasyan.kcache.core.annotations.KCacheable)")
     fun wrapKCacheableControllerMethod(joinPoint: ProceedingJoinPoint): Any? {
         val methodSignature = joinPoint.signature as MethodSignature
-        val currentMetadata = requestHandlerMetadataContainer.getMetadata(methodSignature)
+//        val currentMetadata = requestHandlerMetadataContainer.getMetadata(methodSignature)
+        val annotation = methodSignature
+            .method
+            .getAnnotation(KCacheable::class.java)
 
         val currentETag = eTagBuilder.buildETag(
-            getTableStates(currentMetadata)
+//            getTableStates(currentMetadata)
+            annotation.tables.toList()
         )
         val previousETag = headerExtractor.extract(
             methodSignature.method,
@@ -49,20 +52,22 @@ class KCacheableAspect(
         )
 
         if (currentETag == previousETag) {
-            logger.atDebug()
-                .addArgument(methodSignature.getMethodName())
-                .log("Equal ETags for method {}: $currentETag, returning 304")
-            return getOnCacheHitResultBuilder(currentMetadata)
+            logger.ifDebug(
+                "Equal ETags for method ${methodSignature.getMethodName()}: " +
+                        "$currentETag, returning 304"
+            )
+//            return getOnCacheHitResultBuilder(currentMetadata)
+            return annotation.onCacheHitResultBuilder.createInstance()
                 .build(currentETag)
         }
 
-        logger.atDebug()
-            .addArgument(methodSignature.getMethodName())
-            .log(
-                "Different ETags for method {}: Current [$currentETag] Previous[$previousETag]. Invoking method."
-            )
+        logger.ifDebug(
+            "Different ETags for method ${methodSignature.getMethodName()}: " +
+                    "Current [$currentETag] Previous[$previousETag]. Invoking method."
+        )
 
-        return getOnCacheMissResultBuilder(currentMetadata)
+//        return getOnCacheMissResultBuilder(currentMetadata)
+        return annotation.onCacheMissResultBuilder.createInstance()
             .build(joinPoint.proceed(), currentETag)
     }
 

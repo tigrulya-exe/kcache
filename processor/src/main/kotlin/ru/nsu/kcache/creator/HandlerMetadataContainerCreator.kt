@@ -45,7 +45,7 @@ class HandlerMetadataContainerCreator {
                     entry.value.let { metadataVal ->
                         addStatement(
                             """
-                    $metadataMapPropertyName["${entry.key}"] = %T(
+                    $metadataMapPropertyName["${entry.key}"]·=·%T(
                         listOf(
                             ${
                                 metadataVal.tableStates

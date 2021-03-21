@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 import ru.nsu.manasyan.kcache.core.annotations.KCacheEvict
 
 @Service
-class TestUserService(
+class TestUserServiceKt(
     private val repository: TestUserRepository
 ) {
     fun getUsers(): List<TestUser> {

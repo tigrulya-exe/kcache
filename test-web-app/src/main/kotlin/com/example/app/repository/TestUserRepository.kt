@@ -6,4 +6,6 @@ interface TestUserRepository {
     fun getUsers(): List<TestUser>
 
     fun addUser(user: TestUser)
+
+    fun findUserById(id: String): TestUser?
 }

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Primary
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractorComposite
 import ru.nsu.manasyan.kcache.core.etag.extractor.RequestHeaderIfNoneMatchHeaderExtractor
-import ru.nsu.manasyan.kcache.core.etag.extractor.ResponseEntityIfNoneMatchHeaderExtractor
+import ru.nsu.manasyan.kcache.core.etag.extractor.RequestEntityIfNoneMatchHeaderExtractor
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
 //TODO: add configs depending on application.yaml
@@ -24,7 +24,7 @@ class ETagExtractorConfiguration {
 
     @Bean
     fun responseEntityIfNoneMatchHeaderExtractor(): IfNoneMatchHeaderExtractor {
-        return ResponseEntityIfNoneMatchHeaderExtractor()
+        return RequestEntityIfNoneMatchHeaderExtractor()
     }
 
     @Bean

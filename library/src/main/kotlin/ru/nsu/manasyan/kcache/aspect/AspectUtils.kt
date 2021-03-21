@@ -28,6 +28,7 @@ fun MethodSignature.getMethodName(): String {
         append("(")
         parameterTypes.forEach {
             append(it.name)
+            append(", ")
         }
         append(")")
     }.toString()

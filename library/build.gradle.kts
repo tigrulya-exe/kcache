@@ -1,14 +1,14 @@
 plugins {
-    id("org.springframework.boot") version "2.4.0"
-    id("io.spring.dependency-management") version "1.0.10.RELEASE"
+    id("org.springframework.boot") version "2.4.4"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("plugin.spring") version "1.4.10"
 }
 
-tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar>{
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
     enabled = false
 }
 
-tasks.withType<Jar>{
+tasks.withType<Jar> {
     enabled = true
 }
 
@@ -18,10 +18,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.redisson:redisson:3.14.1")
-
-    implementation("org.slf4j:slf4j-api:2.0.0-alpha1")
-
+    implementation("org.redisson:redisson:3.15.1")
 
     implementation("com.hazelcast:hazelcast:4.1.1")
 

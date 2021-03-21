@@ -21,7 +21,9 @@ class RequestHeaderIfNoneMatchHeaderExtractor : IfNoneMatchHeaderExtractor {
                     && parameterAnnotation.name == HttpHeaders.IF_NONE_MATCH
                 ) {
                     return (methodArgs[currentParameter] as String?)
-                        ?.replace("\"", "")
+                        ?.let {
+                            extractIfNoneMatchFromHeader(it)
+                        }
                         ?.ifBlank {
                             logger.debug("Blank If-None-Match header value was found in method ${method.name}")
                             return null

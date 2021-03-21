@@ -1,18 +1,28 @@
 version: "3.2"
 services:
-  redis:
-    image: "redis"
-    ports:
-      - "6379:6379"
+  postgres:
+    image: postgres
     environment:
-      - REDIS_REPLICATION_MODE=master
-
-  test-app-first:
-    build: .
+      POSTGRES_DB: ${POSTGRES_DB:-user}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_INITDB_ARGS: "-E UTF8"
     ports:
-      - "8081:8080"
+      - "5432:5432"
 
-  test-app-second:
-    build: .
-    ports:
-      - "8082:8080"
+#  redis:
+#    image: "redis"
+#    ports:
+#      - "6379:6379"
+#    environment:
+#      - REDIS_REPLICATION_MODE=master
+#
+#  test-app-first:
+#    build: .
+#    ports:
+#      - "8081:8080"
+#
+#  test-app-second:
+#    build: .
+#    ports:
+#      - "8082:8080"

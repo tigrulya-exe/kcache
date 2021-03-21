@@ -23,3 +23,9 @@ class LoggerProperty : ReadOnlyProperty<Any?, Logger> {
         return logger!!
     }
 }
+
+fun Logger.ifDebug(message: String, vararg arguments: Any) {
+    if (this.isDebugEnabled) {
+        this.debug(message, arguments)
+    }
+}

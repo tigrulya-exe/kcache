@@ -7,24 +7,28 @@ import java.util.*
 @Repository
 class RamTestUserRepository : TestUserRepository {
     // TODO: make concurrent
-    private val users = mutableListOf(
-        TestUser("ONE", "Peter", 21),
-        TestUser("TWO", "Jane", 25),
-        TestUser("THREE", "Jack", 63),
-        TestUser("FOUR", "Anna", 49),
+    private val users = mutableMapOf(
+        "ONE" to TestUser("ONE", "Peter", 21),
+        "TWO" to TestUser("TWO", "Jane", 25),
+        "THREE" to TestUser("THREE", "Jack", 63),
+        "FOUR" to TestUser("FOUR", "Anna", 49),
     )
 
     override fun getUsers(): List<TestUser> {
-        return users
+        return users.values.toList()
     }
 
     override fun addUser(user: TestUser) {
-        users.add(
-            TestUser(
-                UUID.randomUUID().toString(),
+        UUID.randomUUID().toString().apply {
+            users[this] = TestUser(
+                this,
                 user.name,
                 user.age
             )
-        )
+        }
+    }
+
+    override fun findUserById(id: String): TestUser? {
+        return users[id]
     }
 }
