@@ -39,11 +39,8 @@ class KCacheableProcessor : AbstractProcessor() {
         elementUtils = processingEnv.elementUtils
     }
 
-    private fun getOnCacheHitResultBuilderClassName(annotation: KCacheable) =
-        getAnnotationValueClassName(annotation) { onCacheHitResultBuilder }
-
-    private fun getOnCacheMissResultBuilderClassName(annotation: KCacheable) =
-        getAnnotationValueClassName(annotation) { onCacheMissResultBuilder }
+    private fun getResultBuilderFactoryClassName(annotation: KCacheable) =
+        getAnnotationValueClassName(annotation) { resultBuilderFactory }
 
     // dirty hack from stackoverflow ¯\_(ツ)_/¯
     private fun getAnnotationValueClassName(
@@ -84,8 +81,7 @@ class KCacheableProcessor : AbstractProcessor() {
                     element.getAnnotation(KCacheable::class.java)?.let {
                         kCacheableMetadata["$enclosingName.$element"] = RequestHandlerMetadata(
                             tableStates = it.tables.asList(),
-                            onCacheHitResultBuilder = getOnCacheHitResultBuilderClassName(it)!!,
-                            onCacheMissResultBuilder = getOnCacheMissResultBuilderClassName(it)!!
+                            resultBuilderFactory = getResultBuilderFactoryClassName(it)!!
                         )
                     }
                 }

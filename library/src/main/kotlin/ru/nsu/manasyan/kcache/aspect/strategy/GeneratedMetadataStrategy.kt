@@ -10,7 +10,7 @@ class GeneratedMetadataStrategy(
     private val requestHandlerMetadataContainer: RequestHandlerMetadataContainer
 ) : KCacheableAspectStrategy {
 
-    private var metadata: RequestHandlerMetadata? = null
+    private lateinit var metadata: RequestHandlerMetadata
 
     override var methodSignature: MethodSignature? = null
         set(value) {
@@ -18,18 +18,16 @@ class GeneratedMetadataStrategy(
             metadata = requestHandlerMetadataContainer.getMetadata(value!!)
         }
 
-    override fun getTableStates() = metadata
-        ?.tableStates
-        ?.ifEmpty {
-            throw IllegalArgumentException("KCacheable annotation should contain at list 1 table")
-        }
+    override fun getTableStates() = runIfInitialized {
+        metadata.tableStates
+            .ifEmpty {
+                throw IllegalArgumentException("KCacheable annotation should contain at list 1 table")
+            }
+    }
 
     // TODO: mb refactor (store class objects in BuilderLocator (map <className, object>)) or add cache
-    override fun getOnCacheHitResultBuilder() = metadata
-        ?.onCacheHitResultBuilder
-        ?.createInstance()
-
-    override fun getOnCacheMissResultBuilder() = metadata
-        ?.onCacheMissResultBuilder
-        ?.createInstance()
+    override fun getResultBuilderFactory() = runIfInitialized {
+        metadata.resultBuilderFactory
+            .createInstance()
+    }
 }

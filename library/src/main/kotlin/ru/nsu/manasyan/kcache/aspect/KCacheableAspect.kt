@@ -7,18 +7,18 @@ import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
+import ru.nsu.manasyan.kcache.aspect.strategy.KCacheableAspectStrategy
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
-import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadata
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import ru.nsu.manasyan.kcache.util.ifDebug
-import kotlin.reflect.full.createInstance
 
 @Aspect
 class KCacheableAspect(
     private val eTagBuilder: ETagBuilder,
     private val headerExtractor: IfNoneMatchHeaderExtractor,
+    private val strategy: KCacheableAspectStrategy
 ) {
     private val logger by LoggerProperty()
 
@@ -37,27 +37,23 @@ class KCacheableAspect(
     @Around("@annotation(ru.nsu.manasyan.kcache.core.annotations.KCacheable)")
     fun wrapKCacheableControllerMethod(joinPoint: ProceedingJoinPoint): Any? {
         val methodSignature = joinPoint.signature as MethodSignature
-//        val currentMetadata = requestHandlerMetadataContainer.getMetadata(methodSignature)
-        val annotation = methodSignature
-            .method
-            .getAnnotation(KCacheable::class.java)
+        strategy.methodSignature = methodSignature
 
         val currentETag = eTagBuilder.buildETag(
-//            getTableStates(currentMetadata)
-            annotation.tables.toList()
+            strategy.getTableStates()
         )
         val previousETag = headerExtractor.extract(
             methodSignature.method,
             joinPoint.args
         )
 
+        val factory = strategy.getResultBuilderFactory()
         if (currentETag == previousETag) {
             logger.ifDebug(
                 "Equal ETags for method ${methodSignature.getMethodName()}: " +
                         "$currentETag, returning 304"
             )
-//            return getOnCacheHitResultBuilder(currentMetadata)
-            return annotation.onCacheHitResultBuilder.createInstance()
+            return factory.getOnHitResultBuilder()
                 .build(currentETag)
         }
 
@@ -66,22 +62,7 @@ class KCacheableAspect(
                     "Current [$currentETag] Previous[$previousETag]. Invoking method."
         )
 
-//        return getOnCacheMissResultBuilder(currentMetadata)
-        return annotation.onCacheMissResultBuilder.createInstance()
+        return factory.getOnMissResultBuilder()
             .build(joinPoint.proceed(), currentETag)
     }
-
-    private fun getTableStates(metadata: RequestHandlerMetadata) =
-        metadata.tableStates.ifEmpty {
-            throw IllegalArgumentException("KCacheable annotation should contain at list 1 table")
-        }
-
-    // TODO: mb refactor (store class objects in BuilderLocator (map <className, object>)) or add cache
-    private fun getOnCacheHitResultBuilder(metadata: RequestHandlerMetadata) = metadata
-        .onCacheHitResultBuilder
-        .createInstance()
-
-    private fun getOnCacheMissResultBuilder(metadata: RequestHandlerMetadata) = metadata
-        .onCacheMissResultBuilder
-        .createInstance()
 }

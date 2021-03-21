@@ -56,8 +56,7 @@ class HandlerMetadataContainerCreator {
                                     )
                             }
                         ),
-                        ${metadataVal.onCacheHitResultBuilder}::class,
-                        ${metadataVal.onCacheMissResultBuilder}::class
+                        ${metadataVal.resultBuilderFactory}::class
                     )
                 """.trimIndent(),
                             requestHandlerMetadataClassName

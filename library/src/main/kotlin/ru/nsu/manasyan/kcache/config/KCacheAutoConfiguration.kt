@@ -6,8 +6,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.context.annotation.ScopedProxyMode
+import org.springframework.web.context.annotation.RequestScope
 import ru.nsu.manasyan.kcache.aspect.KCacheEvictAspect
 import ru.nsu.manasyan.kcache.aspect.KCacheableAspect
+import ru.nsu.manasyan.kcache.aspect.strategy.KCacheableAspectStrategy
+import ru.nsu.manasyan.kcache.aspect.strategy.ReflectionMetadataStrategy
 import ru.nsu.manasyan.kcache.core.etag.builder.ConcatenateETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
@@ -83,6 +87,13 @@ class KCacheAutoConfiguration {
         return ConcatenateETagBuilder(stateHolder)
     }
 
+    // TODO: add configs depending on properties file
+    @RequestScope(proxyMode = ScopedProxyMode.INTERFACES)
+    @Bean
+    fun kCacheAspectStrategy(): KCacheableAspectStrategy {
+        return ReflectionMetadataStrategy()
+    }
+
     /**
      * Creates [KCacheableAspect] bean if
      * there are no [StateHolder] and [ETagBuilder] beans in context
@@ -92,13 +103,13 @@ class KCacheAutoConfiguration {
     fun kCacheAspect(
         eTagBuilder: ETagBuilder,
         extractor: IfNoneMatchHeaderExtractor,
-        requestHandlerMetadataContainer: RequestHandlerMetadataContainer
+        strategy: KCacheableAspectStrategy
     ): KCacheableAspect {
         logger.debug("Building KCacheAspect")
         return KCacheableAspect(
             eTagBuilder,
             extractor,
-            requestHandlerMetadataContainer
+            strategy
         )
     }
 
