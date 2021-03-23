@@ -37,6 +37,10 @@ class HazelcastStateHolder(
     override fun clear() {
         states.clear()
     }
+
+    override fun mergeState(tableId: String, default: String): String {
+        return states.merge(tableId, default) { _, new -> new }!!
+    }
 }
 
 class ReplicatedMapEntryListener : EntryListener<String, String> {

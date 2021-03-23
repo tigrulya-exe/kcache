@@ -23,4 +23,10 @@ class RedisStateHolder(
     override fun clear() {
         redissonClient.keys.flushall()
     }
+
+    override fun mergeState(tableId: String, default: String): String {
+        return getState(tableId) ?: default.also {
+            redissonClient.getBucket<String>(tableId).set(default)
+        }
+    }
 }

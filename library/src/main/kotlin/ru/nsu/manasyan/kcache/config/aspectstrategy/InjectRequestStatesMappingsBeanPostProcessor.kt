@@ -1,7 +1,6 @@
-package ru.nsu.manasyan.kcache.config
+package ru.nsu.manasyan.kcache.config.aspectstrategy
 
 import org.springframework.beans.factory.config.BeanPostProcessor
-import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadata
 import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadataContainer
 import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider

@@ -2,7 +2,6 @@ package ru.nsu.manasyan.kcache.core.state.holder
 
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
 
 /**
  * DB tables' states storage in RAM. Only for single instance usage.
@@ -13,7 +12,7 @@ class RamStateHolder : StateHolder {
     /**
      * Key - table id, value - table's hash
      */
-    private val states: ConcurrentMap<String, String> = ConcurrentHashMap()
+    private val states: MutableMap<String, String> = ConcurrentHashMap()
 
     override fun getState(tableId: String) = states[tableId]
 
@@ -25,4 +24,7 @@ class RamStateHolder : StateHolder {
     override fun removeState(tableId: String) = states.remove(tableId) != null
 
     override fun clear() = states.clear()
+
+    override fun mergeState(tableId: String, default: String): String =
+        states.merge(tableId, default) { _, new -> new }!!
 }

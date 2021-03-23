@@ -6,10 +6,11 @@ import ru.nsu.manasyan.kcache.core.annotations.KCacheable
 import java.nio.file.Path
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 import javax.tools.Diagnostic
 
 typealias KCacheableMetadata = MutableMap<String, RequestHandlerMetadata>
@@ -27,6 +28,8 @@ class KCacheableProcessor : AbstractProcessor() {
 
     private lateinit var elementUtils: Elements
 
+    private lateinit var typeUtils: Types
+
     private val kCacheableMetadata: KCacheableMetadata = mutableMapOf()
 
     private val metadataCreator = HandlerMetadataContainerCreator()
@@ -37,6 +40,7 @@ class KCacheableProcessor : AbstractProcessor() {
         messager = processingEnv.messager
         filer = processingEnv.filer
         elementUtils = processingEnv.elementUtils
+        typeUtils = processingEnv.typeUtils
     }
 
     private fun getResultBuilderFactoryClassName(annotation: KCacheable) =
@@ -71,18 +75,27 @@ class KCacheableProcessor : AbstractProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
         runCatching {
             roundEnv.getElementsAnnotatedWith(KCacheable::class.java)
-                ?.filter { it.kind == ElementKind.METHOD }
+                ?.filterIsInstance<ExecutableElement>()
                 ?.forEach { element ->
-                    val enclosingName = elementUtils.getBinaryName(
-                        // we know that element's kind is method
-                        element.enclosingElement as TypeElement
-                    )
-
                     element.getAnnotation(KCacheable::class.java)?.let {
-                        kCacheableMetadata["$enclosingName.$element"] = RequestHandlerMetadata(
-                            tableStates = it.tables.asList(),
-                            resultBuilderFactory = getResultBuilderFactoryClassName(it)!!
+                        val enclosingName = elementUtils.getBinaryName(
+                            // we know that element's kind is method
+                            element.enclosingElement as TypeElement
                         )
+
+                        val parameters = element.parameters.joinToString(
+                            prefix = "(",
+                            separator = ",",
+                            postfix = ")"
+                        ) {
+                            typeUtils.asElement(it.asType()).toString()
+                        }
+
+                        kCacheableMetadata["$enclosingName.${element.simpleName}$parameters"] =
+                            RequestHandlerMetadata(
+                                tableStates = it.tables.asList(),
+                                resultBuilderFactory = getResultBuilderFactoryClassName(it)!!
+                            )
                     }
                 }
 

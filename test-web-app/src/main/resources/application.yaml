@@ -1,6 +1,9 @@
 # for tests only
 kcache:
   state-holder: hazelcast
+  aspect:
+    strategy:
+      generated-metadata
 logging:
   level:
     ru:

@@ -25,12 +25,14 @@ fun MethodSignature.getMethodName(): String {
         append(declaringTypeName)
         append(".")
         append(method.name)
-        append("(")
-        parameterTypes.forEach {
-            append(it.name)
-            append(", ")
-        }
-        append(")")
+        append(
+            parameterTypes.joinToString(
+                prefix = "(",
+                separator = ",",
+                postfix = ")",
+                transform = { it.canonicalName }
+            )
+        )
     }.toString()
 }
 

@@ -25,4 +25,11 @@ interface StateHolder {
      * Removes all tables' states
      */
     fun clear()
+
+    /**
+     * If the specified key is not already associated with a value
+     * or is associated with null, associates it with the given non-null value.
+     * @return state of table with id == tableId
+     */
+    fun mergeState(tableId: String, default: String): String
 }

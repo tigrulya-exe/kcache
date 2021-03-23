@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConstructorBinding
 @ConfigurationProperties("${KCacheProperties.propertiesPrefix}.hazelcast")
-// TODO: remove default values
 class HazelcastProperties(
     val host: String? = "localhost",
     val port: Int? = 5701,

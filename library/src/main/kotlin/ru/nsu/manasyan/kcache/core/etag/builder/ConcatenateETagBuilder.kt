@@ -8,12 +8,12 @@ import ru.nsu.manasyan.kcache.exceptions.UnknownTableIdException
  */
 class ConcatenateETagBuilder(override val stateHolder: StateHolder) : ETagBuilder {
     companion object {
-        // TODO: get value from application.yaml
         const val DEFAULT_SEPARATOR = ":"
     }
 
     override fun buildETag(tableIds: List<String>): String {
         return tableIds.joinToString(separator = DEFAULT_SEPARATOR) {
+            // TODO: use here mergeState
             stateHolder.getState(it) ?: throw UnknownTableIdException("Wrong table id: $it")
         }
     }
