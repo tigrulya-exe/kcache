@@ -21,10 +21,14 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Deploy library to registry
-        run: ./gradlew :library:publish
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :library:publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy annotation processor to registry
-        run: ./gradlew :library:publish
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :processor:publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
