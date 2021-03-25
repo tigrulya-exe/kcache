@@ -31,5 +31,11 @@ allprojects {
 				}
 			}
 		}
+
+		publications {
+			create<MavenPublication>("mavenKotlin") {
+				from(components["kotlin"])
+			}
+		}
 	}
 }
