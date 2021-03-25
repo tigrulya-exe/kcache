@@ -2,14 +2,7 @@ plugins {
     id("org.springframework.boot") version "2.4.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("plugin.spring") version "1.4.10"
-}
-
-tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-    enabled = false
-}
-
-tasks.withType<Jar> {
-    enabled = true
+    `maven-publish`
 }
 
 dependencies {
@@ -26,13 +19,36 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "11"
+        }
+    }
+
+    jar {
+        enabled = true
+    }
+
+    bootJar {
+        enabled = false
+    }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/tigrulya-exe/kcache")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }

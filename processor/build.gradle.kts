@@ -1,5 +1,6 @@
 plugins {
     kotlin("kapt")
+    `maven-publish`
 }
 
 dependencies {
@@ -11,9 +12,24 @@ dependencies {
     kapt("com.google.auto.service:auto-service:1.0-rc7")
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+tasks {
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "11"
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/tigrulya-exe/kcache")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
