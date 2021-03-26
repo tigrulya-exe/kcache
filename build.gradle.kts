@@ -1,10 +1,12 @@
 plugins {
 	kotlin("jvm") version "1.4.10" apply false
+	`maven-publish`
 }
 
 allprojects {
 	apply {
 		plugin("org.jetbrains.kotlin.jvm")
+		plugin("maven-publish")
 	}
 
 	group = "ru.nsu.manasyan"
