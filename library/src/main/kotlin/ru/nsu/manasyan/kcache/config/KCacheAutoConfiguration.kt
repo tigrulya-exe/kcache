@@ -41,9 +41,12 @@ class KCacheAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    fun eTagBuilder(stateHolder: StateHolder): ETagBuilder {
+    fun eTagBuilder(
+        stateHolder: StateHolder,
+        properties: KCacheProperties
+    ): ETagBuilder {
         logger.debug("Building ConcatenateETagBuilder")
-        return ConcatenateETagBuilder(stateHolder)
+        return ConcatenateETagBuilder(stateHolder, properties)
     }
 
     /**

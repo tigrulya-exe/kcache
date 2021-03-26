@@ -11,8 +11,8 @@ import ru.nsu.manasyan.kcache.aspect.strategy.ReflectionMetadataStrategy
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
-@Configuration
 @Import(GeneratedMetadataStrategyConfiguration::class)
+@Configuration
 class AspectStrategyConfiguration {
     private val logger by LoggerProperty()
 
