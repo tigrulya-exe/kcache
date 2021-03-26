@@ -4,6 +4,7 @@ import com.google.auto.service.AutoService
 import ru.nsu.kcache.creator.HandlerMetadataContainerCreator
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
 import java.nio.file.Path
+import java.nio.file.Paths
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ExecutableElement
@@ -66,7 +67,7 @@ class KCacheableProcessor : AbstractProcessor() {
         metadataCreator
             .create(kCacheableMetadata)
             .writeTo(
-                Path.of(
+                Paths.get(
                     kaptDir, metadataCreator.handlerMetadataClassName
                 )
             )

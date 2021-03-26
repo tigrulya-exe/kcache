@@ -5,7 +5,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import ru.nsu.kcache.KCacheableMetadata
 import ru.nsu.manasyan.kcache.core.handler.GeneratedHandlerMetadataContainer
 import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadataContainer
-import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadata as GeneratedMetadata
+import ru.nsu.manasyan.kcache.core.handler.RequestHandlerMetadata
 
 class HandlerMetadataContainerCreator {
     companion object {
@@ -18,7 +18,7 @@ class HandlerMetadataContainerCreator {
         .asClassName()
         .parameterizedBy(
             String::class.asClassName(),
-            GeneratedMetadata::class.asClassName()
+            RequestHandlerMetadata::class.asClassName()
         )
 
     private fun createProperty() = PropertySpec.builder(
@@ -34,8 +34,8 @@ class HandlerMetadataContainerCreator {
         )
 
         val requestHandlerMetadataClassName = ClassName(
-            GeneratedMetadata::class.java.packageName,
-            GeneratedMetadata::class.simpleName!!
+            RequestHandlerMetadata::class.java.packageName,
+            RequestHandlerMetadata::class.simpleName!!
         )
 
         return CodeBlock.builder()
@@ -76,7 +76,7 @@ class HandlerMetadataContainerCreator {
             ).build()
         )
         .addStatement("return metadataMap[handlerName]")
-        .returns(GeneratedMetadata::class.asTypeName().copy(nullable = true))
+        .returns(RequestHandlerMetadata::class.asTypeName().copy(nullable = true))
         .build()
 
     private fun createGetAllMetadataFunction() = FunSpec.builder("getAllMetadata")

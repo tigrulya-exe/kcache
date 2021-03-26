@@ -15,6 +15,21 @@ allprojects {
 		sourceCompatibility = JavaVersion.VERSION_1_8
 	}
 
+	configure<PublishingExtension> {
+		repositories {
+			maven {
+				name = "JitPack"
+				url = uri("https://jitpack.io")
+			}
+		}
+
+		publications {
+			create<MavenPublication>("mavenKotlin") {
+				from(components["kotlin"])
+			}
+		}
+	}
+
 	repositories {
 		mavenCentral()
 		google()
