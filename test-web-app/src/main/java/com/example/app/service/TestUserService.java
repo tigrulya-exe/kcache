@@ -19,6 +19,7 @@ public class TestUserService {
         return repository.getUsers();
     }
 
+    @KCacheEvict(tables = {"users"})
     public void addUser(TestUser user) {
         repository.addUser(user);
     }

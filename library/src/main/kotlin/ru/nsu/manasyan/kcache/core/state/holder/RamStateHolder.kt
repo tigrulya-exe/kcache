@@ -26,5 +26,5 @@ class RamStateHolder : StateHolder {
     override fun clear() = states.clear()
 
     override fun mergeState(tableId: String, default: String): String =
-        states.merge(tableId, default) { _, new -> new }!!
+        states.merge(tableId, default) { old, _ -> old }!!
 }

@@ -39,7 +39,7 @@ class HazelcastStateHolder(
     }
 
     override fun mergeState(tableId: String, default: String): String {
-        return states.merge(tableId, default) { _, new -> new }!!
+        return states.merge(tableId, default) { old, _ -> old }!!
     }
 }
 

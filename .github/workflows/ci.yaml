@@ -20,15 +20,7 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Deploy library to registry
+      - name: Run tests
         run: |
           chmod +x ./gradlew
-          ./gradlew :library:publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy annotation processor to registry
-        run: |
-          chmod +x ./gradlew
-          ./gradlew :processor:publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ./gradlew :test-web-app:test
