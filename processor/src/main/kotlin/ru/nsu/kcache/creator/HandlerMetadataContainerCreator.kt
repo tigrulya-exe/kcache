@@ -34,7 +34,7 @@ class HandlerMetadataContainerCreator {
         )
 
         val requestHandlerMetadataClassName = ClassName(
-            RequestHandlerMetadata::class.java.packageName,
+            RequestHandlerMetadata::class.java.`package`.name,
             RequestHandlerMetadata::class.simpleName!!
         )
 
@@ -102,7 +102,7 @@ class HandlerMetadataContainerCreator {
 
     fun create(metadata: KCacheableMetadata): FileSpec {
         return FileSpec.builder(
-            GeneratedHandlerMetadataContainer::class.java.packageName,
+            GeneratedHandlerMetadataContainer::class.java.`package`.name,
             handlerMetadataClassName
         ).addType(
             createTypeSpec(metadata)
