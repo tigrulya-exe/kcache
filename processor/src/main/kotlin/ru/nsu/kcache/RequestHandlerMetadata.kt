@@ -5,5 +5,7 @@ import ru.nsu.manasyan.kcache.core.resultbuilder.ResponseEntityResultBuilderFact
 class RequestHandlerMetadata(
     val tableStates: List<String> = mutableListOf(),
 
-    val resultBuilderFactory: String = ResponseEntityResultBuilderFactory::class.qualifiedName!!
+    val resultBuilderFactory: String = ResponseEntityResultBuilderFactory::class.qualifiedName!!,
+
+    val key: String = ""
 )

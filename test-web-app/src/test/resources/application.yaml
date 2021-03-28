@@ -1,5 +1,14 @@
 kcache:
   state-holder: hazelcast
+  redis:
+    host: localhost
+    port: 6379
   hazelcast:
     host: localhost
     port: 5703
+logging:
+  level:
+    ru:
+      nsu:
+        manasyan:
+          kcache: DEBUG

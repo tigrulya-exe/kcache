@@ -1,12 +1,13 @@
-package ru.nsu.manasyan.kcache.config.stateholder
+package ru.nsu.manasyan.kcache.config.stateholdermanager
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import ru.nsu.manasyan.kcache.core.state.holder.RamStateHolder
 import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
+import ru.nsu.manasyan.kcache.core.state.holdermanager.RamStateHolderManager
+import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
@@ -16,16 +17,16 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
 @Configuration
 @Import(
     value = [
-        RedisStateHolderConfiguration::class,
-        HazelcastStateHolderConfiguration::class
+        RedisStateHolderManagerConfiguration::class,
+        HazelcastStateHolderManagerConfiguration::class
     ]
 )
 class StateHolderConfiguration {
     private val logger by LoggerProperty()
 
     /**
-     * Creates [RamStateHolder] bean if
-     * there was no [RamStateHolder] in context or kcache.state-holder
+     * Creates [RamStateHolderManager] bean if
+     * there was no [RamStateHolderManager] in context or kcache.state-holder
      * property's value in properties file is [KCacheProperties.StateHolder.RAM]
      */
     @Bean
@@ -36,8 +37,8 @@ class StateHolderConfiguration {
         havingValue = "ram",
         matchIfMissing = true
     )
-    fun ramStateHolder(): StateHolder {
+    fun ramStateHolderManager(): StateHolderManager {
         logger.debug("Building RamStateHolder")
-        return RamStateHolder()
+        return RamStateHolderManager()
     }
 }

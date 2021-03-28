@@ -9,4 +9,6 @@ class RequestHandlerMetadata(
 
     val resultBuilderFactory: KClass<out ResultBuilderFactory> =
         ResponseEntityResultBuilderFactory::class,
+
+    val key: String = ""
 )

@@ -5,13 +5,13 @@ import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
 import ru.nsu.manasyan.kcache.core.annotations.KCacheEvict
-import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
+import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
 @Aspect
 class KCacheEvictAspect(
-    private val stateHolder: StateHolder,
+    private val stateHolderManager: StateHolderManager,
     private val newStateProvider: NewStateProvider
 ) {
     private val logger by LoggerProperty()
@@ -25,10 +25,12 @@ class KCacheEvictAspect(
         val method = (joinPoint.signature as MethodSignature).method
         // we know, that method has KCacheEvict annotation
         // TODO: mb get tables from generated container as well as in KCacheable
-        val updatedTables = getAnnotationInstance<KCacheEvict>(method)!!.tables
-        updatedTables.forEach { tableName ->
+        val annotation = getAnnotationInstance<KCacheEvict>(method)!!
+        annotation.tables.forEach { tableName ->
             val newState = newStateProvider.provide(tableName)
-            stateHolder.setState(tableName, newState)
+            stateHolderManager
+                .getOrCreateStateHolder(tableName)
+                .setState(annotation.key, newState)
             logger.debug("Table $tableName was updated: $newState")
         }
     }

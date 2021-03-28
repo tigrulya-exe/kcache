@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.config.stateholder
+package ru.nsu.manasyan.kcache.config.stateholdermanager
 
 import org.redisson.Redisson
 import org.redisson.api.RedissonClient
@@ -8,7 +8,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import ru.nsu.manasyan.kcache.core.state.holder.RedisStateHolder
-import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
+import ru.nsu.manasyan.kcache.core.state.holdermanager.RedisStateHolderManager
+import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.properties.RedisProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
@@ -23,7 +24,7 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
     havingValue = "redis"
 )
 @EnableConfigurationProperties(RedisProperties::class)
-class RedisStateHolderConfiguration {
+class RedisStateHolderManagerConfiguration {
 
     private val logger by LoggerProperty()
 
@@ -38,12 +39,12 @@ class RedisStateHolderConfiguration {
     }
 
     /**
-     * Creates [RedisStateHolder] bean if kcache.state-holder
+     * Creates [RedisStateHolderManager] bean if kcache.state-holder
      * property's value in properties file is [KCacheProperties.StateHolder.REDIS]
      */
     @Bean
-    fun redisStateHolder(redisClient: RedissonClient): StateHolder {
+    fun redisStateHolder(redisClient: RedissonClient): StateHolderManager {
         logger.debug("Building RedisStateHolder")
-        return RedisStateHolder(redisClient)
+        return RedisStateHolderManager(redisClient)
     }
 }

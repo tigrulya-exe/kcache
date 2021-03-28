@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.config.stateholder
+package ru.nsu.manasyan.kcache.config.stateholdermanager
 
 import com.hazelcast.config.Config
 import com.hazelcast.core.Hazelcast
@@ -8,7 +8,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import ru.nsu.manasyan.kcache.core.state.holder.HazelcastStateHolder
-import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
+import ru.nsu.manasyan.kcache.core.state.holdermanager.HazelcastStateHolderManager
+import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
 import ru.nsu.manasyan.kcache.properties.HazelcastProperties
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
@@ -23,7 +24,7 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
     havingValue = "hazelcast"
 )
 @EnableConfigurationProperties(HazelcastProperties::class)
-class HazelcastStateHolderConfiguration {
+class HazelcastStateHolderManagerConfiguration {
 
     private val logger by LoggerProperty()
 
@@ -41,16 +42,16 @@ class HazelcastStateHolderConfiguration {
     }
 
     /**
-     * Creates [HazelcastStateHolder] bean if kcache.state-holder
+     * Creates [HazelcastStateHolderManager] bean if kcache.state-holder
      * property's value in properties file is [KCacheProperties.StateHolder.HAZELCAST]
      */
     @Bean
-    fun hazelcastStateHolder(
+    fun hazelcastStateHolderManager(
         hazelcastClient: HazelcastInstance,
         properties: HazelcastProperties
-    ): StateHolder {
+    ): StateHolderManager {
         logger.debug("Building HazelcastStateHolder")
-        return HazelcastStateHolder(hazelcastClient, properties)
+        return HazelcastStateHolderManager(hazelcastClient)
     }
 
 }

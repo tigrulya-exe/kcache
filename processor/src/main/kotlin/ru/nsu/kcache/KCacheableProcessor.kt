@@ -95,7 +95,8 @@ class KCacheableProcessor : AbstractProcessor() {
                         kCacheableMetadata["$enclosingName.${element.simpleName}$parameters"] =
                             RequestHandlerMetadata(
                                 tableStates = it.tables.asList(),
-                                resultBuilderFactory = getResultBuilderFactoryClassName(it)!!
+                                resultBuilderFactory = getResultBuilderFactoryClassName(it)!!,
+                                key = it.key
                             )
                     }
                 }
