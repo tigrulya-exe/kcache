@@ -5,41 +5,26 @@ import com.hazelcast.core.EntryListener
 import com.hazelcast.core.HazelcastInstance
 import com.hazelcast.map.MapEvent
 import com.hazelcast.replicatedmap.ReplicatedMap
-import ru.nsu.manasyan.kcache.properties.HazelcastProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
 class HazelcastStateHolder(
     client: HazelcastInstance,
-    properties: HazelcastProperties
-) : StateHolder {
-    private val states: ReplicatedMap<String, String> = client.getReplicatedMap(properties.mapName!!)
-
+    stateHolderName: String
+) : MapStateHolder(client.getReplicatedMap(stateHolderName)) {
     private val logger by LoggerProperty()
 
     init {
         if (logger.isDebugEnabled) {
-            states.addEntryListener(ReplicatedMapEntryListener())
+            (states as ReplicatedMap<String, String>)
+                .addEntryListener(ReplicatedMapEntryListener())
         }
     }
 
-    override fun getState(tableId: String): String? {
-        return states[tableId]
-    }
-
-    override fun setState(tableId: String, state: String) {
-        states[tableId] = state
-    }
-
-    override fun removeState(tableId: String): Boolean {
-        return states.remove(tableId) != null
-    }
-
-    override fun clear() {
-        states.clear()
-    }
-
-    override fun mergeState(tableId: String, default: String): String {
-        return states.merge(tableId, default) { old, _ -> old }!!
+    override fun setAll(state: String) {
+        // changing the values without a Map.put() is not reflected on the other members
+        states.forEach { (key, _) ->
+            states[key] = state
+        }
     }
 }
 

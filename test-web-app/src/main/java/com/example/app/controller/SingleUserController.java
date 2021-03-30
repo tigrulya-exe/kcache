@@ -1,13 +1,9 @@
 package com.example.app.controller;
 
-import com.example.app.data.TestUser;
 import com.example.app.service.TestUserService;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable;
 
 @RestController
@@ -25,6 +21,7 @@ public class SingleUserController {
     )
     public ResponseEntity<?> getUserById(
             @PathVariable String id,
+            @RequestParam(value = "limit", defaultValue = "20") int limit,
             RequestEntity<?> requestEntity
     ) {
         return ResponseEntity.ok(service.getUser(id));

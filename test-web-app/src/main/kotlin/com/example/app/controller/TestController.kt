@@ -1,7 +1,7 @@
 package com.example.app.controller
 
 import com.example.app.data.TestUser
-import com.example.app.service.TestUserService
+import com.example.app.service.TestUserServiceKt
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -9,7 +9,8 @@ import ru.nsu.manasyan.kcache.core.annotations.KCacheable
 
 @RequestMapping("/test")
 @RestController
-class TestController(private val service: TestUserService) {
+class TestController(private val service: TestUserServiceKt) {
+//    @KCacheable(tables = ["users"], key = "#params[0]")
     @KCacheable(tables = ["users"])
     @GetMapping("/users")
     fun getUsers(
@@ -31,4 +32,3 @@ class TestController(private val service: TestUserService) {
         service.addUser(user)
     }
 }
-

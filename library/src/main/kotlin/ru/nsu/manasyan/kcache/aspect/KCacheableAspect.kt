@@ -4,6 +4,9 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
+import org.springframework.expression.EvaluationContext
+import org.springframework.expression.ExpressionParser
+import org.springframework.expression.spel.support.StandardEvaluationContext
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
@@ -18,7 +21,8 @@ import ru.nsu.manasyan.kcache.util.ifDebug
 class KCacheableAspect(
     private val eTagBuilder: ETagBuilder,
     private val headerExtractor: IfNoneMatchHeaderExtractor,
-    private val strategy: KCacheableAspectStrategy
+    private val strategy: KCacheableAspectStrategy,
+    private val expressionParser: ExpressionParser
 ) {
     private val logger by LoggerProperty()
 
@@ -40,8 +44,10 @@ class KCacheableAspect(
         strategy.methodSignature = methodSignature
 
         val currentETag = eTagBuilder.buildETag(
-            strategy.getTableStates()
+            strategy.getTableStates(),
+            getKey(strategy.getKeyExpression(), joinPoint.args)
         )
+
         val previousETag = headerExtractor.extract(
             methodSignature.method,
             joinPoint.args
@@ -64,5 +70,17 @@ class KCacheableAspect(
 
         return factory.getOnMissResultBuilder()
             .build(joinPoint.proceed(), currentETag)
+    }
+
+    private fun getKey(keyExpression: String, parameters: Array<Any>): String {
+        if (!keyExpression.startsWith("#")) {
+            return keyExpression
+        }
+        val expression = expressionParser.parseExpression(keyExpression)
+        val context: EvaluationContext = StandardEvaluationContext().apply {
+            setVariable("params", parameters)
+        }
+        return expression.getValue(context)?.toString()
+            ?: throw IllegalArgumentException("Key should not be null")
     }
 }

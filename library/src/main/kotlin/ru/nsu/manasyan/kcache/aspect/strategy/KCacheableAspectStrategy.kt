@@ -7,7 +7,10 @@ interface KCacheableAspectStrategy {
     var methodSignature: MethodSignature?
 
     fun getTableStates(): List<String>
+
     fun getResultBuilderFactory(): ResultBuilderFactory
+
+    fun getKeyExpression(): String
 
     fun <R> runIfInitialized(action: () -> R): R = methodSignature?.let {
         action()

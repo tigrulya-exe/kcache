@@ -30,4 +30,8 @@ class GeneratedMetadataStrategy(
         metadata.resultBuilderFactory
             .createInstance()
     }
+
+    override fun getKeyExpression() = runIfInitialized {
+        metadata.key
+    }
 }

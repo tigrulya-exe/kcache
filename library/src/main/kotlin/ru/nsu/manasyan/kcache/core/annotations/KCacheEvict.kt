@@ -14,6 +14,9 @@ annotation class KCacheEvict(
      */
     val tables: Array<String>,
 
+    // TODO: add description
+    val key: String = "",
+
     /**
      * TODO: временное решение
      * JPA сущности, состояние которых должно измениться при вызове аннотированного участка кода

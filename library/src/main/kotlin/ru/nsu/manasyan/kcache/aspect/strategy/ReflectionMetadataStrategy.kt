@@ -22,4 +22,8 @@ class ReflectionMetadataStrategy : KCacheableAspectStrategy {
     override fun getResultBuilderFactory() = runIfInitialized {
         kCacheable.resultBuilderFactory.createInstance()
     }
+
+    override fun getKeyExpression() = runIfInitialized {
+        kCacheable.key
+    }
 }

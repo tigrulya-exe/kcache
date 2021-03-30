@@ -18,6 +18,9 @@ annotation class KCacheable(
     val resultBuilderFactory: KClass<out ResultBuilderFactory> =
         ResponseEntityResultBuilderFactory::class,
 
+    // TODO: add description
+    val key: String = "",
+
     /**
      * TODO: временное решение
      * TODO: сделать отдельную аннотацию , в которой принимать Entity вместо имен таблиц

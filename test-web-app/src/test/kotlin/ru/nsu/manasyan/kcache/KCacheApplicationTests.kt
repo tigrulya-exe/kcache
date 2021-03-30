@@ -27,6 +27,8 @@ class KCacheSimpleApplicationTests(
 
         const val ADD_USERS_PATH = "/test/users"
 
+        const val DEFAULT_USER_ID = "TEST_ID"
+
         const val DEFAULT_USER_NAME = "TEST_NAME"
 
         const val DEFAULT_USER_AGE = 18
@@ -77,6 +79,14 @@ class KCacheSimpleApplicationTests(
         Assertions.assertEquals(updatedETag, getUsersResponse.headers.eTag)
     }
 
+    @Test
+    fun put() {
+        val updateUserResponse = restTemplate.exchange<Void>(
+            RequestEntity.post(URI.create(ADD_USERS_PATH))
+                .body(getTestUser())
+        )
+    }
+
     private fun getTestUsers(previousETag: String? = null): ResponseEntity<*> {
         return restTemplate.exchange<ArrayList<TestUser>>(
             RequestEntity.get(
@@ -90,6 +100,7 @@ class KCacheSimpleApplicationTests(
     }
 
     private fun getTestUser() = TestUser(
+        id = DEFAULT_USER_ID,
         name = DEFAULT_USER_NAME,
         age = DEFAULT_USER_AGE
     )

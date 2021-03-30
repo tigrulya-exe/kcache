@@ -3,16 +3,17 @@ package ru.nsu.kcache
 import com.google.auto.service.AutoService
 import ru.nsu.kcache.creator.HandlerMetadataContainerCreator
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
-import java.nio.file.Path
 import java.nio.file.Paths
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import javax.tools.Diagnostic
+
 
 typealias KCacheableMetadata = MutableMap<String, RequestHandlerMetadata>
 
@@ -89,13 +90,17 @@ class KCacheableProcessor : AbstractProcessor() {
                             separator = ",",
                             postfix = ")"
                         ) {
-                            typeUtils.asElement(it.asType()).toString()
+                            when (val type = it.asType()) {
+                                is DeclaredType -> typeUtils.asElement(type)
+                                else -> type
+                            }.toString()
                         }
 
                         kCacheableMetadata["$enclosingName.${element.simpleName}$parameters"] =
                             RequestHandlerMetadata(
                                 tableStates = it.tables.asList(),
-                                resultBuilderFactory = getResultBuilderFactoryClassName(it)!!
+                                resultBuilderFactory = getResultBuilderFactoryClassName(it)!!,
+                                key = it.key
                             )
                     }
                 }

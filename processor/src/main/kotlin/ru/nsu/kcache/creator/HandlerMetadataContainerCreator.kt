@@ -56,7 +56,8 @@ class HandlerMetadataContainerCreator {
                                     )
                             }
                         ),
-                        ${metadataVal.resultBuilderFactory}::class
+                        ${metadataVal.resultBuilderFactory}::class,
+                        "${metadataVal.key}"
                     )
                 """.trimIndent(),
                             requestHandlerMetadataClassName
