@@ -3,7 +3,7 @@ kcache:
   state-holder: hazelcast
   aspect:
     strategy:
-      generated-metadata
+      reflection-metadata
 logging:
   level:
     ru:

@@ -26,7 +26,7 @@ open class MapStateHolder(
             return
         }
         setStateAction(key, state)
-        setStateAction(wholeStateHolderKey, key)
+        setStateAction(wholeStateHolderKey, state)
     }
 
     override fun mergeState(key: String, default: String) =
