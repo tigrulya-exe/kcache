@@ -13,6 +13,8 @@ dependencies {
     implementation("org.redisson:redisson:3.15.1")
 
     implementation("com.hazelcast:hazelcast:4.1.1")
+//    implementation("org.reflections:reflections:0.9.11")
+    implementation("io.github.classgraph:classgraph:4.8.102")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

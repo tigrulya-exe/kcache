@@ -6,12 +6,13 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
+import ru.nsu.manasyan.kcache.core.annotations.KCacheableJpa
 
 @RequestMapping("/test")
 @RestController
 class TestController(private val service: TestUserServiceKt) {
-//    @KCacheable(tables = ["users"], key = "#params[0]")
-    @KCacheable(tables = ["users"])
+//    @KCacheable(tables = ["users"])
+    @KCacheableJpa(entities = [TestController::class])
     @GetMapping("/users")
     fun getUsers(
         @RequestHeader(name = HttpHeaders.IF_NONE_MATCH, required = false)

@@ -8,7 +8,10 @@ import kotlin.reflect.KClass
 /**
  * Enables HTTP-caching of request which was processing by current method
  */
-@Target(AnnotationTarget.FUNCTION)
+@Target(
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.CLASS
+)
 annotation class KCacheable(
     /**
      * Tables on which the return value of the HTTP-request handler method depends
