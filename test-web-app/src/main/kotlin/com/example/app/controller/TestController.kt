@@ -21,6 +21,14 @@ class TestController(private val service: TestUserServiceKt) {
         )
     }
 
+    @KCacheable(tables = ["users"])
+    @GetMapping("/context-request")
+    fun getUsers(): ResponseEntity<*> {
+        return ResponseEntity.ok().body(
+            service.getUsers()
+        )
+    }
+
     @GetMapping("/evict")
     fun evictUsersCache() {
         service.evictUsersCache()

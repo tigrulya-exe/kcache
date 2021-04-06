@@ -3,9 +3,9 @@ package ru.nsu.manasyan.kcache.core.etag.extractor
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import java.lang.reflect.Method
 
-class IfNoneMatchHeaderExtractorComposite(
-    private val extractors: List<IfNoneMatchHeaderExtractor>
-) : IfNoneMatchHeaderExtractor {
+class EtagExtractorComposite(
+    private val extractors: List<EtagExtractor>
+) : EtagExtractor {
     private val logger by LoggerProperty()
 
     override fun extract(method: Method, methodArgs: Array<Any>): String? {

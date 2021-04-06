@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
 import ru.nsu.manasyan.kcache.core.annotations.KCacheableJpa
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
-import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
+import ru.nsu.manasyan.kcache.core.etag.extractor.EtagExtractor
 import ru.nsu.manasyan.kcache.core.resultbuilder.KCacheResultBuilder
 import ru.nsu.manasyan.kcache.core.state.storage.StateStorage
 import ru.nsu.manasyan.kcache.util.LoggerProperty
@@ -23,7 +23,7 @@ import kotlin.reflect.full.createInstance
 @Aspect
 open class KCacheableAspect(
     private val eTagBuilder: ETagBuilder,
-    private val headerExtractor: IfNoneMatchHeaderExtractor,
+    private val headerExtractor: EtagExtractor,
     private val expressionParser: ExpressionParser
 ) {
     private companion object {

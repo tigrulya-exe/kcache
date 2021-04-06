@@ -10,10 +10,10 @@ import org.springframework.expression.spel.standard.SpelExpressionParser
 import ru.nsu.manasyan.kcache.aspect.KCacheEvictAspect
 import ru.nsu.manasyan.kcache.aspect.KCacheableAspect
 import ru.nsu.manasyan.kcache.config.jpa.HibernateListenerConfiguration
-import ru.nsu.manasyan.kcache.config.stateholdermanager.StateHolderConfiguration
+import ru.nsu.manasyan.kcache.config.statestorage.StateHolderConfiguration
 import ru.nsu.manasyan.kcache.core.etag.builder.ConcatenateETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
-import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
+import ru.nsu.manasyan.kcache.core.etag.extractor.EtagExtractor
 import ru.nsu.manasyan.kcache.core.state.storage.StateStorage
 import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
@@ -58,7 +58,7 @@ class KCacheAutoConfiguration {
     @Bean
     fun kCacheAspect(
         eTagBuilder: ETagBuilder,
-        extractor: IfNoneMatchHeaderExtractor,
+        extractor: EtagExtractor,
         expressionParser: ExpressionParser
     ): KCacheableAspect {
         logger.debug("Building KCacheAspect")

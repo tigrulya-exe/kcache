@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import java.lang.reflect.Method
 
-class RequestHeaderIfNoneMatchHeaderExtractor : IfNoneMatchHeaderExtractor {
+class RequestHeaderEtagExtractor : EtagExtractor {
     private val logger by LoggerProperty()
 
     /**
@@ -21,7 +21,7 @@ class RequestHeaderIfNoneMatchHeaderExtractor : IfNoneMatchHeaderExtractor {
                     && parameterAnnotation.name == HttpHeaders.IF_NONE_MATCH
                 ) {
                     return (methodArgs[currentParameter] as String?)
-                        ?.let { extractIfNoneMatchFromHeader(it) }
+                        ?.removeQuotes()
                         ?.ifBlank {
                             logger.debug("Blank If-None-Match header value was found in method ${method.name}")
                             return null

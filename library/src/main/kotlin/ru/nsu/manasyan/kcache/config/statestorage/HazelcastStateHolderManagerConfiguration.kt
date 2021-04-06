@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.config.stateholdermanager
+package ru.nsu.manasyan.kcache.config.statestorage
 
 import com.hazelcast.config.Config
 import com.hazelcast.core.Hazelcast

@@ -10,7 +10,8 @@ allprojects {
 	}
 
 	group = "ru.nsu.manasyan"
-	version = "0.1.0"
+	version = "0.3.1"
+
 	configure<JavaPluginExtension> {
 		sourceCompatibility = JavaVersion.VERSION_1_8
 	}
