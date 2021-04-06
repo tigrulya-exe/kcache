@@ -9,8 +9,7 @@ plugins {
 }
 
 dependencies {
-//	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-//	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -19,8 +18,12 @@ dependencies {
     implementation("org.redisson:redisson:3.14.1")
     implementation("com.google.code.gson:gson:2.8.6")
 
+    runtimeOnly("com.h2database:h2")
+
     implementation(project(":library"))
     kapt(project(":processor"))
+
+    implementation("org.flywaydb:flyway-core")
 
     testImplementation("com.natpryce:hamkrest:1.8.0.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

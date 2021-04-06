@@ -3,7 +3,6 @@ package ru.nsu.manasyan.kcache.aspect
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Aspect
-import org.aspectj.lang.reflect.MethodSignature
 import ru.nsu.manasyan.kcache.core.annotations.KCacheEvict
 import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
@@ -20,17 +19,16 @@ class KCacheEvictAspect(
      * Processes section of code, which changes the state of the DB.
      * Updates state of each DB table, listed in the tables field of [KCacheEvict]
      */
-    @After("@annotation(ru.nsu.manasyan.kcache.core.annotations.KCacheEvict)")
-    fun wrapKCacheEvictMethod(joinPoint: JoinPoint) {
-        val method = (joinPoint.signature as MethodSignature).method
-        // we know, that method has KCacheEvict annotation
-        // TODO: mb get tables from generated container as well as in KCacheable
-        val annotation = getAnnotationInstance<KCacheEvict>(method)!!
-        annotation.tables.forEach { tableName ->
+    @After("@annotation(kCacheEvict)")
+    fun wrapKCacheEvictMethod(
+        joinPoint: JoinPoint,
+        kCacheEvict: KCacheEvict
+    ) {
+        kCacheEvict.tables.forEach { tableName ->
             val newState = newStateProvider.provide(tableName)
             stateHolderManager
                 .getOrCreateStateHolder(tableName)
-                .setState(annotation.key, newState)
+                .setState(kCacheEvict.key, newState)
             logger.debug("Table $tableName was updated: $newState")
         }
     }

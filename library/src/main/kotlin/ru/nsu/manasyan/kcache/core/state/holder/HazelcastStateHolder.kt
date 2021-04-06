@@ -46,7 +46,7 @@ class ReplicatedMapEntryListener : EntryListener<String, String> {
     override fun mapEvicted(event: MapEvent?) = mapEventHandlerEvicted(event)
 
     private fun entryEventHandler(event: EntryEvent<String, String>?) {
-        logger.debug("Map '${event?.name}' was ${event?.eventType}: ${event?.key}, ${event?.value}")
+        logger.debug("Map '${event?.name}' was ${event?.eventType}: ('${event?.key}', '${event?.value}')")
     }
 
     private fun mapEventHandlerEvicted(event: MapEvent?) {

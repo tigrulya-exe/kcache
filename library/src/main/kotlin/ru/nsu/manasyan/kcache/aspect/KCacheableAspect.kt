@@ -10,20 +10,26 @@ import org.springframework.expression.spel.support.StandardEvaluationContext
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
-import ru.nsu.manasyan.kcache.aspect.strategy.KCacheableAspectStrategy
 import ru.nsu.manasyan.kcache.core.annotations.KCacheable
+import ru.nsu.manasyan.kcache.core.annotations.KCacheableJpa
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
+import ru.nsu.manasyan.kcache.core.resultbuilder.ResultBuilderFactory
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import ru.nsu.manasyan.kcache.util.ifDebug
+import kotlin.reflect.full.createInstance
 
 @Aspect
-class KCacheableAspect(
+open class KCacheableAspect(
     private val eTagBuilder: ETagBuilder,
     private val headerExtractor: IfNoneMatchHeaderExtractor,
-    private val strategy: KCacheableAspectStrategy,
     private val expressionParser: ExpressionParser
 ) {
+    private companion object {
+        private const val SPEL_PREFIX = "#"
+        private const val SPEL_CONTEXT_ARGS_KEY = "args"
+    }
+
     private val logger by LoggerProperty()
 
     /**
@@ -38,14 +44,40 @@ class KCacheableAspect(
      * then the wrapped method is called and its result ([ResponseEntity]) is returned
      * with the ETag header set to the current ETag value.
      */
-    @Around("@annotation(ru.nsu.manasyan.kcache.core.annotations.KCacheable)")
-    fun wrapKCacheableControllerMethod(joinPoint: ProceedingJoinPoint): Any? {
+    @Around("@annotation(kCacheable)")
+    open fun wrapKCacheableMethod(
+        joinPoint: ProceedingJoinPoint,
+        kCacheable: KCacheable,
+    ): Any? = handleKCacheable(
+        joinPoint,
+        kCacheable.tables.toList(),
+        kCacheable.key,
+        kCacheable.resultBuilderFactory.createInstance()
+    )
+
+    @Around("@annotation(kCacheableJpa)")
+    open fun wrapKCacheableJpaMethod(
+        joinPoint: ProceedingJoinPoint,
+        kCacheableJpa: KCacheableJpa,
+    ): Any? = handleKCacheable(
+        joinPoint,
+        kCacheableJpa.entities.map { it.qualifiedName!! },
+        "",
+        kCacheableJpa.resultBuilderFactory.createInstance()
+    )
+
+    private fun handleKCacheable(
+        joinPoint: ProceedingJoinPoint,
+        tables: List<String>,
+        key: String,
+        resultBuilderFactory: ResultBuilderFactory
+    ): Any? {
         val methodSignature = joinPoint.signature as MethodSignature
-        strategy.methodSignature = methodSignature
+        val methodArgs = joinPoint.args
 
         val currentETag = eTagBuilder.buildETag(
-            strategy.getTableStates(),
-            getKey(strategy.getKeyExpression(), joinPoint.args)
+            tables,
+            getKey(key, methodArgs)
         )
 
         val previousETag = headerExtractor.extract(
@@ -53,14 +85,12 @@ class KCacheableAspect(
             joinPoint.args
         )
 
-        val factory = strategy.getResultBuilderFactory()
         if (currentETag == previousETag) {
             logger.ifDebug(
                 "Equal ETags for method ${methodSignature.getMethodName()}: " +
                         "$currentETag, returning 304"
             )
-            return factory.getOnHitResultBuilder()
-                .build(currentETag)
+            return resultBuilderFactory.getOnHitResultBuilder().build(currentETag)
         }
 
         logger.ifDebug(
@@ -68,19 +98,24 @@ class KCacheableAspect(
                     "Current [$currentETag] Previous[$previousETag]. Invoking method."
         )
 
-        return factory.getOnMissResultBuilder()
-            .build(joinPoint.proceed(), currentETag)
+        return resultBuilderFactory.getOnMissResultBuilder().build(
+            joinPoint.proceed(),
+            currentETag
+        )
     }
 
-    private fun getKey(keyExpression: String, parameters: Array<Any>): String {
-        if (!keyExpression.startsWith("#")) {
+    private fun getKey(keyExpression: String, args: Array<Any>): String {
+        if (!keyExpression.startsWith(SPEL_PREFIX)) {
             return keyExpression
         }
-        val expression = expressionParser.parseExpression(keyExpression)
         val context: EvaluationContext = StandardEvaluationContext().apply {
-            setVariable("params", parameters)
+            setVariable(SPEL_CONTEXT_ARGS_KEY, args)
         }
-        return expression.getValue(context)?.toString()
+        return expressionParser
+            .parseExpression(keyExpression)
+            .getValue(context)
+            ?.toString()
             ?: throw IllegalArgumentException("Key should not be null")
     }
 }
+

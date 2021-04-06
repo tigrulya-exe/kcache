@@ -16,12 +16,12 @@ public class TestUserService {
     }
 
     public List<TestUser> getUsers() {
-        return repository.getUsers();
+        return repository.findAll();
     }
 
     @KCacheEvict(tables = {"users"})
     public void addUser(TestUser user) {
-        repository.addUser(user);
+        repository.save(user);
     }
 
     public TestUser getUser(String id) {
