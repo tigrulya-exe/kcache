@@ -14,8 +14,8 @@ import ru.nsu.manasyan.kcache.config.stateholdermanager.StateHolderConfiguration
 import ru.nsu.manasyan.kcache.core.etag.builder.ConcatenateETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
-import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
-import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
+import ru.nsu.manasyan.kcache.core.state.storage.StateStorage
+import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
@@ -38,22 +38,22 @@ class KCacheAutoConfiguration {
 
     /**
      * Creates default [ETagBuilder] bean if
-     * there is [StateHolder] instance in context
+     * there is [StateStorage] instance in context
      * and there are no another [ETagBuilder] beans
      */
     @Bean
     @ConditionalOnMissingBean
     fun eTagBuilder(
-        stateHolderManager: StateHolderManager,
+        stateStorageManager: StateStorageManager,
         properties: KCacheProperties
     ): ETagBuilder {
         logger.debug("Building ConcatenateETagBuilder")
-        return ConcatenateETagBuilder(stateHolderManager, properties)
+        return ConcatenateETagBuilder(stateStorageManager, properties)
     }
 
     /**
      * Creates [KCacheableAspect] bean if
-     * there are no [StateHolder] and [ETagBuilder] beans in context
+     * there are no [StateStorage] and [ETagBuilder] beans in context
      */
     @Bean
     fun kCacheAspect(
@@ -71,15 +71,15 @@ class KCacheAutoConfiguration {
 
     /**
      * Creates [KCacheEvictAspect] bean if
-     * there are [StateHolder] and [ETagBuilder] beans in context
+     * there are [StateStorage] and [ETagBuilder] beans in context
      */
     @Bean
     fun kCacheEvictAspect(
-        stateHolderManager: StateHolderManager,
+        stateStorageManager: StateStorageManager,
         newStateProvider: NewStateProvider
     ): KCacheEvictAspect {
         logger.debug("Building KCacheEvictAspect")
-        return KCacheEvictAspect(stateHolderManager, newStateProvider)
+        return KCacheEvictAspect(stateStorageManager, newStateProvider)
     }
 
     @Bean

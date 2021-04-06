@@ -1,13 +1,13 @@
 package ru.nsu.manasyan.kcache.core.etag.builder
 
-import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
+import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 
 /**
  * Simple implementation of ETag builder, which concatenates tables' states.
  */
 class ConcatenateETagBuilder(
-    override val stateHolderManager: StateHolderManager,
+    override val stateStorageManager: StateStorageManager,
     private val properties: KCacheProperties
 ) : ETagBuilder {
     companion object {
@@ -16,7 +16,7 @@ class ConcatenateETagBuilder(
 
     override fun buildETag(tableIds: List<String>, key: String): String {
         return tableIds.joinToString(separator = DEFAULT_SEPARATOR) {
-            stateHolderManager.getOrCreateStateHolder(it)
+            stateStorageManager.getOrCreateStateHolder(it)
                 .mergeState(key, properties.defaultState)
         }
     }

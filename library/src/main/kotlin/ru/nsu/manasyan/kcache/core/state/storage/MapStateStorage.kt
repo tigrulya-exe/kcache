@@ -1,15 +1,14 @@
-package ru.nsu.manasyan.kcache.core.state.holder
+package ru.nsu.manasyan.kcache.core.state.storage
 
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
-open class MapStateHolder(
+open class MapStateStorage(
     val states: MutableMap<String, String>,
-    private val wholeStateHolderKey: String = "",
     wholeStateHolderDefaultValue: String = "ETag-Default"
-) : StateHolder {
+) : StateStorage {
 
     init {
-        states[wholeStateHolderKey] = wholeStateHolderDefaultValue
+        states[StateStorage.WHOLE_TABLE_KEY] = wholeStateHolderDefaultValue
     }
 
     private val logger by LoggerProperty()
@@ -21,12 +20,12 @@ open class MapStateHolder(
     override fun clear() = states.clear()
 
     override fun setState(key: String, state: String) {
-        if (wholeStateHolderKey == key) {
+        if (StateStorage.WHOLE_TABLE_KEY == key) {
             setAll(state)
             return
         }
         setStateAction(key, state)
-        setStateAction(wholeStateHolderKey, state)
+        setStateAction(StateStorage.WHOLE_TABLE_KEY, state)
     }
 
     override fun mergeState(key: String, default: String) =

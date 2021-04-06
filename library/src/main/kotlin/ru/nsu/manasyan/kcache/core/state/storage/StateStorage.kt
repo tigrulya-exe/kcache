@@ -1,9 +1,9 @@
-package ru.nsu.manasyan.kcache.core.state.holder
+package ru.nsu.manasyan.kcache.core.state.storage
 
 /**
  * Entity, which contains information about current DB tables state
  */
-interface StateHolder {
+interface StateStorage {
     companion object {
         const val WHOLE_TABLE_KEY = ""
     }

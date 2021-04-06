@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import ru.nsu.manasyan.kcache.core.annotations.KCacheableJpa
 import ru.nsu.manasyan.kcache.core.jpa.KCacheableEntitiesListener
-import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
+import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
@@ -36,10 +36,10 @@ class HibernateListenerConfiguration(
 
     @Bean
     fun kCacheableEntitiesHibernateListener(
-        stateHolderManager: StateHolderManager,
+        stateStorageManager: StateStorageManager,
         stateProvider: NewStateProvider,
     ): KCacheableEntitiesListener = KCacheableEntitiesListener(
-        stateHolderManager,
+        stateStorageManager,
         stateProvider,
         getKCacheableEntities()
     ).also {

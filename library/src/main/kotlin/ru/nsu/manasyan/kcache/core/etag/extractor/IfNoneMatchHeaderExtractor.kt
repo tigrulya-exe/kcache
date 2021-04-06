@@ -9,3 +9,5 @@ fun interface IfNoneMatchHeaderExtractor {
      */
     fun extract(method: Method, methodArgs: Array<Any>): String?
 }
+
+fun extractIfNoneMatchFromHeader(header: String?) = header?.replace("\"", "")

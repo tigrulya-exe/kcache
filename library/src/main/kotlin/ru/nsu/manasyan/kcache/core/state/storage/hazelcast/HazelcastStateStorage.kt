@@ -1,16 +1,17 @@
-package ru.nsu.manasyan.kcache.core.state.holder
+package ru.nsu.manasyan.kcache.core.state.storage.hazelcast
 
 import com.hazelcast.core.EntryEvent
 import com.hazelcast.core.EntryListener
 import com.hazelcast.core.HazelcastInstance
 import com.hazelcast.map.MapEvent
 import com.hazelcast.replicatedmap.ReplicatedMap
+import ru.nsu.manasyan.kcache.core.state.storage.MapStateStorage
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
-class HazelcastStateHolder(
+class HazelcastStateStorage(
     client: HazelcastInstance,
     stateHolderName: String
-) : MapStateHolder(client.getReplicatedMap(stateHolderName)) {
+) : MapStateStorage(client.getReplicatedMap(stateHolderName)) {
     private val logger by LoggerProperty()
 
     init {

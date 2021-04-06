@@ -1,13 +1,13 @@
 package ru.nsu.manasyan.kcache.core.etag.builder
 
-import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
+import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
 
 /**
  *
  * The entity responsible for constructing the ETag value
  */
 interface ETagBuilder {
-    val stateHolderManager: StateHolderManager
+    val stateStorageManager: StateStorageManager
 
     // todo: fix docs
     /**

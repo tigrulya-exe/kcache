@@ -7,6 +7,5 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConfigurationProperties("${KCacheProperties.propertiesPrefix}.hazelcast")
 class HazelcastProperties(
     val host: String? = "localhost",
-    val port: Int? = 5701,
-    val mapName: String? = "states"
+    val port: Int? = 5701
 )

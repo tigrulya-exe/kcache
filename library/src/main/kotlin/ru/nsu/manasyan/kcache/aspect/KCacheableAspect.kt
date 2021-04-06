@@ -14,7 +14,8 @@ import ru.nsu.manasyan.kcache.core.annotations.KCacheable
 import ru.nsu.manasyan.kcache.core.annotations.KCacheableJpa
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
-import ru.nsu.manasyan.kcache.core.resultbuilder.ResultBuilderFactory
+import ru.nsu.manasyan.kcache.core.resultbuilder.KCacheResultBuilder
+import ru.nsu.manasyan.kcache.core.state.storage.StateStorage
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import ru.nsu.manasyan.kcache.util.ifDebug
 import kotlin.reflect.full.createInstance
@@ -52,7 +53,7 @@ open class KCacheableAspect(
         joinPoint,
         kCacheable.tables.toList(),
         kCacheable.key,
-        kCacheable.resultBuilderFactory.createInstance()
+        kCacheable.resultBuilder.createInstance()
     )
 
     @Around("@annotation(kCacheableJpa)")
@@ -62,15 +63,15 @@ open class KCacheableAspect(
     ): Any? = handleKCacheable(
         joinPoint,
         kCacheableJpa.entities.map { it.qualifiedName!! },
-        "",
-        kCacheableJpa.resultBuilderFactory.createInstance()
+        StateStorage.WHOLE_TABLE_KEY,
+        kCacheableJpa.resultBuilder.createInstance()
     )
 
     private fun handleKCacheable(
         joinPoint: ProceedingJoinPoint,
         tables: List<String>,
         key: String,
-        resultBuilderFactory: ResultBuilderFactory
+        resultBuilder: KCacheResultBuilder<*>
     ): Any? {
         val methodSignature = joinPoint.signature as MethodSignature
         val methodArgs = joinPoint.args
@@ -90,7 +91,7 @@ open class KCacheableAspect(
                 "Equal ETags for method ${methodSignature.getMethodName()}: " +
                         "$currentETag, returning 304"
             )
-            return resultBuilderFactory.getOnHitResultBuilder().build(currentETag)
+            return resultBuilder.onCacheHit(currentETag)
         }
 
         logger.ifDebug(
@@ -98,7 +99,7 @@ open class KCacheableAspect(
                     "Current [$currentETag] Previous[$previousETag]. Invoking method."
         )
 
-        return resultBuilderFactory.getOnMissResultBuilder().build(
+        return resultBuilder.onCacheMiss(
             joinPoint.proceed(),
             currentETag
         )

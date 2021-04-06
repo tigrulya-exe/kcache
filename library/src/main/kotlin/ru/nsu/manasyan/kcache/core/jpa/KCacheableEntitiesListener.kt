@@ -2,14 +2,14 @@ package ru.nsu.manasyan.kcache.core.jpa
 
 import org.hibernate.event.spi.*
 import org.hibernate.persister.entity.EntityPersister
-import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
-import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
+import ru.nsu.manasyan.kcache.core.state.storage.StateStorage
+import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import kotlin.reflect.KClass
 
 class KCacheableEntitiesListener(
-    private val stateHolderManager: StateHolderManager,
+    private val stateStorageManager: StateStorageManager,
     private val stateProvider: NewStateProvider,
     private val entities: Set<KClass<*>>
 ) : PostInsertEventListener,
@@ -36,10 +36,10 @@ class KCacheableEntitiesListener(
         entity::class.let { clazz ->
             if (entities.contains(clazz)) {
                 logger.debug("Updating $clazz")
-                stateHolderManager
+                stateStorageManager
                     .getOrCreateStateHolder(clazz.qualifiedName!!)
                     .setState(
-                        StateHolder.WHOLE_TABLE_KEY,
+                        StateStorage.WHOLE_TABLE_KEY,
                         stateProvider.provide(clazz.qualifiedName!!)
                     )
             }
