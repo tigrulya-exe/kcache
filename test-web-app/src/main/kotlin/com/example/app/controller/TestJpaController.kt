@@ -5,13 +5,13 @@ import com.example.app.service.TestUserServiceKt
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import ru.nsu.manasyan.kcache.core.annotations.KCacheable
+import ru.nsu.manasyan.kcache.core.annotations.KCacheableJpa
 
 @RequestMapping("/test/users")
 @RestController
-class TestController(private val service: TestUserServiceKt) {
-    @KCacheable(tables = ["users"])
-    @GetMapping
+class TestJpaController(private val service: TestUserServiceKt) {
+    @KCacheableJpa(entities = [TestUser::class])
+    @GetMapping("/jpa")
     fun getUsers(
         @RequestHeader(name = HttpHeaders.IF_NONE_MATCH, required = false)
         ifNoneMatch: String?
@@ -21,13 +21,8 @@ class TestController(private val service: TestUserServiceKt) {
         )
     }
 
-    @GetMapping("/evict")
-    fun evictUsersCache() {
-        service.evictUsersCache()
-    }
-
-    @PostMapping
-    fun addUser(@RequestBody user: TestUser) {
-        service.addUser(user)
+    @GetMapping("/generate")
+    fun generateUser() {
+        service.generateUser()
     }
 }

@@ -4,6 +4,10 @@ package ru.nsu.manasyan.kcache.core.state.holder
  * Entity, which contains information about current DB tables state
  */
 interface StateHolder {
+    companion object {
+        const val WHOLE_TABLE_KEY = ""
+    }
+
     /**
      * @return state of table with id == tableId or null if such not found
      */

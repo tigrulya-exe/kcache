@@ -48,7 +48,7 @@ open class KCacheableAspect(
     open fun wrapKCacheableMethod(
         joinPoint: ProceedingJoinPoint,
         kCacheable: KCacheable,
-    ): Any? = handle(
+    ): Any? = handleKCacheable(
         joinPoint,
         kCacheable.tables.toList(),
         kCacheable.key,
@@ -59,14 +59,14 @@ open class KCacheableAspect(
     open fun wrapKCacheableJpaMethod(
         joinPoint: ProceedingJoinPoint,
         kCacheableJpa: KCacheableJpa,
-    ): Any? = handle(
+    ): Any? = handleKCacheable(
         joinPoint,
-        kCacheableJpa.entities.map { it.toString() },
+        kCacheableJpa.entities.map { it.qualifiedName!! },
         "",
         kCacheableJpa.resultBuilderFactory.createInstance()
     )
 
-    private fun handle(
+    private fun handleKCacheable(
         joinPoint: ProceedingJoinPoint,
         tables: List<String>,
         key: String,

@@ -9,11 +9,11 @@ import org.springframework.expression.ExpressionParser
 import org.springframework.expression.spel.standard.SpelExpressionParser
 import ru.nsu.manasyan.kcache.aspect.KCacheEvictAspect
 import ru.nsu.manasyan.kcache.aspect.KCacheableAspect
+import ru.nsu.manasyan.kcache.config.jpa.HibernateListenerConfiguration
 import ru.nsu.manasyan.kcache.config.stateholdermanager.StateHolderConfiguration
 import ru.nsu.manasyan.kcache.core.etag.builder.ConcatenateETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.IfNoneMatchHeaderExtractor
-import ru.nsu.manasyan.kcache.core.jpa.EntitiesToListenContainer
 import ru.nsu.manasyan.kcache.core.state.holder.StateHolder
 import ru.nsu.manasyan.kcache.core.state.holdermanager.StateHolderManager
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
@@ -29,6 +29,7 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
         StateHolderConfiguration::class,
         ETagExtractorConfiguration::class,
         StateProviderConfiguration::class,
+        HibernateListenerConfiguration::class
     ]
 )
 @EnableConfigurationProperties(KCacheProperties::class)
@@ -67,12 +68,6 @@ class KCacheAutoConfiguration {
             expressionParser
         )
     }
-
-    @Bean
-    fun entitiesToListenContainer() = EntitiesToListenContainer()
-
-    @Bean
-    fun entitiesToListenContainerBpp() = EntitiesToListenBeanPostProcessor()
 
     /**
      * Creates [KCacheEvictAspect] bean if

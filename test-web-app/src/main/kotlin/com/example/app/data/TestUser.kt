@@ -1,3 +1,14 @@
 package com.example.app.data
 
-data class TestUser(val id: String? = null, val name: String, val age: Int)
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.Table
+
+@Entity
+@Table(name = "Users")
+data class TestUser(
+    @Id
+    val id: String? = null,
+    val name: String,
+    val age: Int
+)
