@@ -34,7 +34,7 @@ open class MapStateStorage(
         }
 
     private fun setStateAction(key: String, state: String) {
-        logger.debug("Update state of $key by $state")
+        logger.debug("Update state of '$key' with '$state'")
         states[key] = state
     }
 

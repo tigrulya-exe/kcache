@@ -4,9 +4,6 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
-import org.springframework.expression.EvaluationContext
-import org.springframework.expression.ExpressionParser
-import org.springframework.expression.spel.support.StandardEvaluationContext
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
@@ -15,6 +12,7 @@ import ru.nsu.manasyan.kcache.core.annotations.KCacheableJpa
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.EtagExtractor
 import ru.nsu.manasyan.kcache.core.resultbuilder.KCacheResultBuilder
+import ru.nsu.manasyan.kcache.core.state.keyparser.KeyParser
 import ru.nsu.manasyan.kcache.core.state.storage.StateStorage
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import ru.nsu.manasyan.kcache.util.ifDebug
@@ -24,13 +22,8 @@ import kotlin.reflect.full.createInstance
 open class KCacheableAspect(
     private val eTagBuilder: ETagBuilder,
     private val headerExtractor: EtagExtractor,
-    private val expressionParser: ExpressionParser
+    private val keyParser: KeyParser
 ) {
-    private companion object {
-        private const val SPEL_PREFIX = "#"
-        private const val SPEL_CONTEXT_ARGS_KEY = "args"
-    }
-
     private val logger by LoggerProperty()
 
     /**
@@ -78,12 +71,12 @@ open class KCacheableAspect(
 
         val currentETag = eTagBuilder.buildETag(
             tables,
-            getKey(key, methodArgs)
+            keyParser.parse(key, methodArgs)
         )
 
         val previousETag = headerExtractor.extract(
             methodSignature.method,
-            joinPoint.args
+            methodArgs
         )
 
         if (currentETag == previousETag) {
@@ -103,20 +96,6 @@ open class KCacheableAspect(
             joinPoint.proceed(),
             currentETag
         )
-    }
-
-    private fun getKey(keyExpression: String, args: Array<Any>): String {
-        if (!keyExpression.startsWith(SPEL_PREFIX)) {
-            return keyExpression
-        }
-        val context: EvaluationContext = StandardEvaluationContext().apply {
-            setVariable(SPEL_CONTEXT_ARGS_KEY, args)
-        }
-        return expressionParser
-            .parseExpression(keyExpression)
-            .getValue(context)
-            ?.toString()
-            ?: throw IllegalArgumentException("Key should not be null")
     }
 }
 

@@ -14,9 +14,11 @@ import ru.nsu.manasyan.kcache.config.statestorage.StateHolderConfiguration
 import ru.nsu.manasyan.kcache.core.etag.builder.ConcatenateETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.extractor.EtagExtractor
+import ru.nsu.manasyan.kcache.core.state.keyparser.KeyParser
+import ru.nsu.manasyan.kcache.core.state.keyparser.SpelKeyParser
+import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
 import ru.nsu.manasyan.kcache.core.state.storage.StateStorage
 import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
-import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 
@@ -51,6 +53,9 @@ class KCacheAutoConfiguration {
         return ConcatenateETagBuilder(stateStorageManager, properties)
     }
 
+    @Bean
+    fun spelKeyParser(expressionParser: ExpressionParser): KeyParser = SpelKeyParser(expressionParser)
+
     /**
      * Creates [KCacheableAspect] bean if
      * there are no [StateStorage] and [ETagBuilder] beans in context
@@ -59,13 +64,13 @@ class KCacheAutoConfiguration {
     fun kCacheAspect(
         eTagBuilder: ETagBuilder,
         extractor: EtagExtractor,
-        expressionParser: ExpressionParser
+        keyParser: KeyParser
     ): KCacheableAspect {
         logger.debug("Building KCacheAspect")
         return KCacheableAspect(
             eTagBuilder,
             extractor,
-            expressionParser
+            keyParser
         )
     }
 
@@ -76,10 +81,15 @@ class KCacheAutoConfiguration {
     @Bean
     fun kCacheEvictAspect(
         stateStorageManager: StateStorageManager,
-        newStateProvider: NewStateProvider
+        newStateProvider: NewStateProvider,
+        keyParser: KeyParser
     ): KCacheEvictAspect {
         logger.debug("Building KCacheEvictAspect")
-        return KCacheEvictAspect(stateStorageManager, newStateProvider)
+        return KCacheEvictAspect(
+            stateStorageManager,
+            newStateProvider,
+            keyParser
+        )
     }
 
     @Bean
