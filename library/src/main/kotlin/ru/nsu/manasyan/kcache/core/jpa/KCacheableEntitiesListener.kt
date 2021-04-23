@@ -37,7 +37,7 @@ class KCacheableEntitiesListener(
             if (entities.contains(clazz)) {
                 logger.debug("Updating $clazz")
                 stateStorageManager
-                    .getOrCreateStateHolder(clazz.qualifiedName!!)
+                    .getOrCreateStateStorage(clazz.qualifiedName!!)
                     .setState(
                         StateStorage.WHOLE_TABLE_KEY,
                         stateProvider.provide(clazz.qualifiedName!!)

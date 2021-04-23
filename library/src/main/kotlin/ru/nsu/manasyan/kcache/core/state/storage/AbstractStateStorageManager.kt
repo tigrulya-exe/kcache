@@ -3,11 +3,11 @@ package ru.nsu.manasyan.kcache.core.state.storage
 abstract class AbstractStateStorageManager : StateStorageManager {
     private val stateHolders: MutableMap<String, StateStorage> = mutableMapOf()
 
-    override fun getStateHolder(stateHolderName: String): StateStorage? =
+    override fun getStateStorage(stateHolderName: String): StateStorage? =
         stateHolders[stateHolderName]
 
-    override fun getOrCreateStateHolder(stateHolderName: String): StateStorage =
-        getStateHolder(stateHolderName) ?: createStateHolder(stateHolderName).also {
+    override fun getOrCreateStateStorage(stateHolderName: String): StateStorage =
+        getStateStorage(stateHolderName) ?: createStateHolder(stateHolderName).also {
             stateHolders[stateHolderName] = it
         }
 

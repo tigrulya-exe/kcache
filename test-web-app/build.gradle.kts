@@ -25,6 +25,7 @@ dependencies {
 
     testImplementation("com.natpryce:hamkrest:1.8.0.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.kotest:kotest-assertions-core:4.0.7")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
 

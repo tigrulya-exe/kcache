@@ -4,9 +4,9 @@ import org.springframework.http.HttpHeaders.IF_NONE_MATCH
 import java.lang.reflect.Method
 import javax.servlet.http.HttpServletRequest
 
-class SpringContextRequestEtagExtractor(
+class SpringContextRequestETagExtractor(
     private val request: HttpServletRequest
-) : EtagExtractor {
+) : ETagExtractor {
     override fun extract(method: Method, methodArgs: Array<Any>): String? =
         request.getHeader(IF_NONE_MATCH)?.removeQuotes()
 }

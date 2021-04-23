@@ -29,7 +29,7 @@ class KCacheEvictAspect(
         kCacheEvict.tables.forEach { tableName ->
             val newState = newStateProvider.provide(tableName)
             stateStorageManager
-                .getOrCreateStateHolder(tableName)
+                .getOrCreateStateStorage(tableName)
                 .setState(
                     keyParser.parse(kCacheEvict.key, joinPoint.args),
                     newState

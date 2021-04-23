@@ -4,7 +4,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.RequestEntity
 import java.lang.reflect.Method
 
-class RequestEntityEtagExtractor : EtagExtractor {
+class RequestEntityETagExtractor : ETagExtractor {
 
     /**
      * Function extracts If-None-Match HTTP-header's value from method's arguments.

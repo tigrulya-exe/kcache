@@ -16,7 +16,7 @@ class ConcatenateETagBuilder(
 
     override fun buildETag(tableIds: List<String>, key: String): String {
         return tableIds.joinToString(separator = DEFAULT_SEPARATOR) {
-            stateStorageManager.getOrCreateStateHolder(it)
+            stateStorageManager.getOrCreateStateStorage(it)
                 .mergeState(key, properties.defaultState)
         }
     }

@@ -9,7 +9,7 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
 import javax.servlet.http.HttpServletRequest
 
 /**
- * Configuration rules for [EtagExtractor] beans
+ * Configuration rules for [ETagExtractor] beans
  */
 @Configuration
 class ETagExtractorConfiguration {
@@ -21,8 +21,8 @@ class ETagExtractorConfiguration {
         havingValue = "true",
         matchIfMissing = true
     )
-    fun contextRequestETagExtractor(request: HttpServletRequest): EtagExtractor {
-        return SpringContextRequestEtagExtractor(request)
+    fun contextRequestETagExtractor(request: HttpServletRequest): ETagExtractor {
+        return SpringContextRequestETagExtractor(request)
     }
 
     @Bean
@@ -31,8 +31,8 @@ class ETagExtractorConfiguration {
         havingValue = "true",
         matchIfMissing = true
     )
-    fun requestHeaderETagExtractor(): EtagExtractor {
-        return RequestHeaderEtagExtractor()
+    fun requestHeaderETagExtractor(): ETagExtractor {
+        return RequestHeaderETagExtractor()
     }
 
     @Bean
@@ -41,17 +41,17 @@ class ETagExtractorConfiguration {
         havingValue = "true",
         matchIfMissing = true
     )
-    fun requestEntityETagExtractor(): EtagExtractor {
-        return RequestEntityEtagExtractor()
+    fun requestEntityETagExtractor(): ETagExtractor {
+        return RequestEntityETagExtractor()
     }
 
     @Bean
     @Primary
     fun ifNoneMatchHeaderExtractorComposite(
-        extractors: List<EtagExtractor>
-    ): EtagExtractor {
+        extractors: List<ETagExtractor>
+    ): ETagExtractor {
         logger.debug("Applied IfNoneMatchHeaderExtractors: $extractors")
-        return EtagExtractorComposite(extractors)
+        return ETagExtractorComposite(extractors)
     }
 
 }

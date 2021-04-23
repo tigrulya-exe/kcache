@@ -13,7 +13,7 @@ import ru.nsu.manasyan.kcache.config.jpa.HibernateListenerConfiguration
 import ru.nsu.manasyan.kcache.config.statestorage.StateHolderConfiguration
 import ru.nsu.manasyan.kcache.core.etag.builder.ConcatenateETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
-import ru.nsu.manasyan.kcache.core.etag.extractor.EtagExtractor
+import ru.nsu.manasyan.kcache.core.etag.extractor.ETagExtractor
 import ru.nsu.manasyan.kcache.core.state.keyparser.KeyParser
 import ru.nsu.manasyan.kcache.core.state.keyparser.SpelKeyParser
 import ru.nsu.manasyan.kcache.core.state.provider.NewStateProvider
@@ -63,7 +63,7 @@ class KCacheAutoConfiguration {
     @Bean
     fun kCacheAspect(
         eTagBuilder: ETagBuilder,
-        extractor: EtagExtractor,
+        extractor: ETagExtractor,
         keyParser: KeyParser
     ): KCacheableAspect {
         logger.debug("Building KCacheAspect")

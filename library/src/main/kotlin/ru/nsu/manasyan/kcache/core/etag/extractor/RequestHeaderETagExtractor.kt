@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import ru.nsu.manasyan.kcache.util.LoggerProperty
 import java.lang.reflect.Method
 
-class RequestHeaderEtagExtractor : EtagExtractor {
+class RequestHeaderETagExtractor : ETagExtractor {
     private val logger by LoggerProperty()
 
     /**
