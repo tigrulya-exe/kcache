@@ -1,15 +1,12 @@
 package ru.nsu.manasyan.kcache.integration
 
 import com.example.app.TestApplication
-import com.example.app.data.TestUser
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.HttpStatus
+import ru.nsu.manasyan.kcache.integration.api.Api
+import ru.nsu.manasyan.kcache.integration.api.ApiAssertions
 
 @SpringBootTest(
     classes = [TestApplication::class],
@@ -18,67 +15,44 @@ import org.springframework.http.HttpStatus
 class KCacheSimpleTests(
     @Autowired restTemplate: TestRestTemplate
 ) {
-    private val api = Api(restTemplate)
-
-    companion object {
-        const val DEFAULT_USER_ID = "TEST_ID"
-
-        const val DEFAULT_USER_NAME = "TEST_NAME"
-
-        const val DEFAULT_USER_AGE = 18
-    }
+    private val apiAssertions = ApiAssertions(
+        Api(restTemplate)
+    )
 
     @Test
     fun `request contains etag`() {
-        api.getUsers()
-            .also { it.statusCode shouldBe HttpStatus.OK }
-            .headers
-            .eTag
-            .also { it shouldNotBe null }
+        apiAssertions.checkNewETagInjected {
+            getUsers()
+        }
     }
 
     @Test
     fun `same etag value for response, depending on unchanged table`() {
-        val eTag = api.getUsers()
-            .also { it.statusCode shouldBe HttpStatus.OK }
-            .headers
-            .eTag
-            .also { it shouldNotBe null }
+        val eTag = apiAssertions.checkNewETagInjected {
+            getUsers()
+        }
 
-        api.getUsers(eTag)
-            .also {
-                it.statusCode shouldBe HttpStatus.NOT_MODIFIED
-                it.headers.eTag shouldBe eTag
-            }
+        apiAssertions.checkStateNotModified(eTag) {
+            getUsers(eTag)
+        }
     }
 
     @Test
     fun `different etag value for response, depending on updated table`() {
-        val eTag = api.getUsers()
-            .also { it.statusCode shouldBe HttpStatus.OK }
-            .headers
-            .eTag
-            .also { it shouldNotBe null }
+        val eTag = apiAssertions.checkNewETagInjected {
+            getUsers()
+        }
 
-        api.updateUser(getTestUser())
-            .also { it.statusCode shouldBe HttpStatus.OK }
+        apiAssertions.checkStateEvicted {
+            evictUsers()
+        }
 
-        val updatedETag = api.getUsers(eTag)
-            .also { it.statusCode shouldBe HttpStatus.OK }
-            .headers
-            .eTag
-            .also { it shouldNotBe eTag }
+        val updatedETag = apiAssertions.checkNewETagInjected(eTag) {
+            getUsers(eTag)
+        }
 
-        api.getUsers(updatedETag)
-            .also {
-                it.statusCode shouldBe HttpStatus.NOT_MODIFIED
-                it.headers.eTag shouldBe updatedETag
-            }
+        apiAssertions.checkStateNotModified(updatedETag) {
+            getUsers(updatedETag)
+        }
     }
-
-    private fun getTestUser() = TestUser(
-        id = DEFAULT_USER_ID,
-        name = DEFAULT_USER_NAME,
-        age = DEFAULT_USER_AGE
-    )
 }

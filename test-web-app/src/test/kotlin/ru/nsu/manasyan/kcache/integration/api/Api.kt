@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.integration
+package ru.nsu.manasyan.kcache.integration.api
 
 import com.example.app.data.TestUser
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -16,9 +16,9 @@ class Api(
 
         const val GET_USER_BY_ID_PATH = "/test/users/%s"
 
-        const val UPDATE_USERS_PATH = "/test/users"
+        const val EVICT_USERS = "/test/users/evict"
 
-        const val UPDATE_USER_PATH = "/test/users/%s"
+        const val EVICT_USER_BY_ID = "/test/users/%s/evict"
     }
 
     fun getUsers(previousETag: String? = null) = get<ArrayList<TestUser>>(
@@ -31,16 +31,18 @@ class Api(
         previousETag
     )
 
-    fun updateUser(updatedUser: TestUser) = post<Void, TestUser>(UPDATE_USERS_PATH, updatedUser)
+    fun evictUsers() = post<Void, Void>(EVICT_USERS)
 
-    fun updateUserById(updatedUser: TestUser) = post<Void, TestUser>(UPDATE_USER_PATH, updatedUser)
+    fun evictUserById(id: String) = post<Void, Void>(EVICT_USER_BY_ID.format(id))
 
     private inline fun <reified R : Any, B : Any> post(
         path: String,
-        body: B
+        body: B? = null
     ): ResponseEntity<R> {
         return restTemplate.exchange(
-            RequestEntity.post(URI.create(path)).body(body)
+            RequestEntity.post(URI.create(path)).let { builder ->
+                body?.let { builder.body(body) } ?: builder.build()
+            }
         )
     }
 

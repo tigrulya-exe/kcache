@@ -13,10 +13,10 @@ import java.util.*
 class RamTestUserRepository : TestUserRepository {
     // TODO: make concurrent
     private val users = mutableMapOf(
-        "ONE" to TestUser("ONE", "Peter", 21),
-        "TWO" to TestUser("TWO", "Jane", 25),
-        "THREE" to TestUser("THREE", "Jack", 63),
-        "FOUR" to TestUser("FOUR", "Anna", 49),
+        "one" to TestUser("ONE", "Peter", 21),
+        "two" to TestUser("TWO", "Jane", 25),
+        "three" to TestUser("THREE", "Jack", 63),
+        "four" to TestUser("FOUR", "Anna", 49),
     )
 
     override fun findAll(): List<TestUser> {

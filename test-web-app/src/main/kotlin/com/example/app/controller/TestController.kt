@@ -29,7 +29,7 @@ class TestController(private val service: TestUserServiceKt) {
         )
     }
 
-    @GetMapping("/evict")
+    @PostMapping("/evict")
     fun evictUsersCache() {
         service.evictUsersCache()
     }

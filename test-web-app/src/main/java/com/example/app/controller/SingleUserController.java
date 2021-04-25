@@ -27,7 +27,7 @@ public class SingleUserController {
         return ResponseEntity.ok(service.getUser(id));
     }
 
-    @GetMapping("/evict/{id}")
+    @PostMapping("/{id}/evict")
     @KCacheEvict(
             tables = "users",
             key = "#args[0]"
