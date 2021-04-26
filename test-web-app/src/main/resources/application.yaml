@@ -15,10 +15,18 @@ kcache:
   jpa:
     listener:
       enable: true
-  state-holder: hazelcast
-  aspect:
-    strategy:
-      generated-metadata
+  state-storage:
+    name: hazelcast
+    hazelcast:
+      discovery:
+        type: TCP_IP
+        tcp-ip:
+          members: localhost
+    redis:
+      host: localhost
+      port: 6379
+
+
 logging:
   level:
     ru:

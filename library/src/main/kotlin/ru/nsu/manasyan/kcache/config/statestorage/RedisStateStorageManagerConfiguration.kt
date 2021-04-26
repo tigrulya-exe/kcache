@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
 import ru.nsu.manasyan.kcache.core.state.storage.redis.RedisStateStorage
 import ru.nsu.manasyan.kcache.core.state.storage.redis.RedisStateStorageManager
-import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.properties.RedisProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
@@ -20,11 +20,11 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
 @Configuration
 @ConditionalOnProperty(
     prefix = KCacheProperties.propertiesPrefix,
-    name = ["state-holder"],
+    name = ["state-storage.name"],
     havingValue = "redis"
 )
 @EnableConfigurationProperties(RedisProperties::class)
-class RedisStateHolderManagerConfiguration {
+class RedisStateStorageManagerConfiguration {
 
     private val logger by LoggerProperty()
 
@@ -33,9 +33,11 @@ class RedisStateHolderManagerConfiguration {
         properties: RedisProperties
     ): RedissonClient {
         logger.debug("Building RedissonClient")
-        val config = Config()
-        config.useSingleServer().address = "redis://${properties.host}:${properties.port}"
-        return Redisson.create(config)
+        return Redisson.create(
+            Config().apply {
+                useSingleServer().address = "redis://${properties.host}:${properties.port}"
+            }
+        )
     }
 
     /**

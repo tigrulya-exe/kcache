@@ -18,6 +18,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.6")
 
     runtimeOnly("com.h2database:h2")
+    runtimeOnly("mysql:mysql-connector-java")
 
     implementation(project(":library"))
 

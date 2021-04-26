@@ -17,11 +17,11 @@ import ru.nsu.manasyan.kcache.util.LoggerProperty
 @Configuration
 @Import(
     value = [
-        RedisStateHolderManagerConfiguration::class,
-        HazelcastStateHolderManagerConfiguration::class
+        RedisStateStorageManagerConfiguration::class,
+        HazelcastStateStorageManagerConfiguration::class
     ]
 )
-class StateHolderConfiguration {
+class StateStorageConfiguration {
     private val logger by LoggerProperty()
 
     /**
@@ -33,7 +33,7 @@ class StateHolderConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnProperty(
         prefix = KCacheProperties.propertiesPrefix,
-        name = ["state-holder"],
+        name = ["state-storage.name"],
         havingValue = "ram",
         matchIfMissing = true
     )
