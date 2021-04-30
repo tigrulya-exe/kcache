@@ -2,8 +2,6 @@ package ru.nsu.manasyan.kcache.config.statestorage
 
 import com.hazelcast.config.Config
 import com.hazelcast.config.JoinConfig
-import com.hazelcast.config.MulticastConfig
-import com.hazelcast.config.TcpIpConfig
 import com.hazelcast.core.Hazelcast
 import com.hazelcast.core.HazelcastInstance
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -14,6 +12,8 @@ import ru.nsu.manasyan.kcache.core.state.storage.StateStorageManager
 import ru.nsu.manasyan.kcache.core.state.storage.hazelcast.HazelcastStateStorage
 import ru.nsu.manasyan.kcache.core.state.storage.hazelcast.HazelcastStateStorageManager
 import ru.nsu.manasyan.kcache.properties.HazelcastDiscoveryProperties
+import ru.nsu.manasyan.kcache.properties.HazelcastDiscoveryProperties.DiscoveryType.MULTICAST
+import ru.nsu.manasyan.kcache.properties.HazelcastDiscoveryProperties.DiscoveryType.TCP_IP
 import ru.nsu.manasyan.kcache.properties.HazelcastProperties
 import ru.nsu.manasyan.kcache.properties.KCacheProperties
 import ru.nsu.manasyan.kcache.util.LoggerProperty
@@ -52,11 +52,11 @@ class HazelcastStateStorageManagerConfiguration {
         logger.debug("Building HazelcastInstance")
         val config = Config()
         when (properties.discovery.type) {
-            HazelcastDiscoveryProperties.DiscoveryType.MULTICAST -> configureMulticast(
+            MULTICAST -> configureMulticast(
                 config.networkConfig.join,
                 properties.discovery
             )
-            HazelcastDiscoveryProperties.DiscoveryType.TCP_IP -> configureTcpIp(
+            TCP_IP -> configureTcpIp(
                 config.networkConfig.join,
                 properties.discovery
             )
