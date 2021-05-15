@@ -25,6 +25,8 @@ kcache:
     redis:
       host: localhost
       port: 6379
+  aop:
+    type: spring-aop
 
 
 logging:

@@ -1,0 +1,12 @@
+<!--[-javaagent:C:\Users\Tigrulya\.gradle\caches\modules-2\files-2.1\org.aspectj\aspectjweaver\1.9.6\ee3b73aa16df35179255f17354d9dfd8e7822835\aspectjweaver-1.9.6.jar]-->
+<aspectj>
+    <aspects>
+        <aspect name="ru.nsu.manasyan.kcache.aspect.KCacheableAspect"/>
+        <aspect name="ru.nsu.manasyan.kcache.aspect.KCacheEvictAspect"/>
+    </aspects>
+<!--    <weaver options="-verbose -showWeaveInfo -Xlint:ignore">-->
+    <weaver options="-Xlint:ignore">
+        <include within="com.example.app..*"/>
+        <include within="ru.nsu.manasyan.kcache.aspect.*"/>
+    </weaver>
+</aspectj>

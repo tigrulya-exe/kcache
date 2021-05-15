@@ -4,6 +4,9 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
+import org.springframework.beans.factory.annotation.Autowire
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Configurable
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
@@ -19,11 +22,19 @@ import ru.nsu.manasyan.kcache.util.ifDebug
 import kotlin.reflect.full.createInstance
 
 @Aspect
-open class KCacheableAspect(
-    private val eTagBuilder: ETagBuilder,
-    private val headerExtractor: ETagExtractor,
-    private val keyParser: KeyParser
-) {
+@Configurable(autowire = Autowire.BY_TYPE)
+open class KCacheableAspect {
+    // field autowiring instead of constructor injection used because of
+    // plain Aspectj post-compile/load-time weaving support
+    @Autowired
+    private lateinit var eTagBuilder: ETagBuilder
+
+    @Autowired
+    private lateinit var headerExtractor: ETagExtractor
+
+    @Autowired
+    private lateinit var keyParser: KeyParser
+
     private val logger by LoggerProperty()
 
     /**
@@ -38,7 +49,7 @@ open class KCacheableAspect(
      * then the wrapped method is called and its result ([ResponseEntity]) is returned
      * with the ETag header set to the current ETag value.
      */
-    @Around("@annotation(kCacheable)")
+    @Around("execution(* *(..)) && @annotation(kCacheable)")
     open fun wrapKCacheableMethod(
         joinPoint: ProceedingJoinPoint,
         kCacheable: KCacheable,
@@ -49,7 +60,7 @@ open class KCacheableAspect(
         kCacheable.resultBuilder.createInstance()
     )
 
-    @Around("@annotation(kCacheableJpa)")
+    @Around("execution(* *(..)) && @annotation(kCacheableJpa)")
     open fun wrapKCacheableJpaMethod(
         joinPoint: ProceedingJoinPoint,
         kCacheableJpa: KCacheableJpa,

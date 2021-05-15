@@ -31,5 +31,10 @@ class TestUserServiceKt(
 
     @KCacheEvict(tables = ["users"])
     fun evictUsersCache() {
+        privateEvict()
+    }
+
+    @KCacheEvict(tables = ["users"])
+    private fun privateEvict() {
     }
 }

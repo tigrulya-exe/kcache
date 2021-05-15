@@ -17,6 +17,7 @@ dependencies {
     implementation("io.github.classgraph:classgraph:4.8.102")
     // TODO: make optional with nebula plugin
     implementation("org.hibernate:hibernate-core:5.4.30.Final")
+    implementation("org.springframework:spring-aspects:5.3.6")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
