@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.config.statestorage
+package ru.nsu.manasyan.kcache.config.state.storage
 
 import org.redisson.Redisson
 import org.redisson.api.RedissonClient

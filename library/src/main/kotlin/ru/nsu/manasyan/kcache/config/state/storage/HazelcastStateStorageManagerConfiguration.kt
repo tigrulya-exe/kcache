@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.config.statestorage
+package ru.nsu.manasyan.kcache.config.state.storage
 
 import com.hazelcast.config.Config
 import com.hazelcast.config.JoinConfig

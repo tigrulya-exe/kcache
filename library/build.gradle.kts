@@ -19,6 +19,8 @@ dependencies {
     implementation("org.hibernate:hibernate-core:5.4.30.Final")
     implementation("org.springframework:spring-aspects:5.3.6")
 
+    implementation("com.zaxxer:HikariCP:4.0.3")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }

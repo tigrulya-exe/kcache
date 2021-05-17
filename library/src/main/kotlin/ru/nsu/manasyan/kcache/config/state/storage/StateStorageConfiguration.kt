@@ -1,4 +1,4 @@
-package ru.nsu.manasyan.kcache.config.statestorage
+package ru.nsu.manasyan.kcache.config.state.storage
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

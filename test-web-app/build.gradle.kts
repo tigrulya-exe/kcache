@@ -19,6 +19,7 @@ dependencies {
 
     runtimeOnly("com.h2database:h2")
     runtimeOnly("mysql:mysql-connector-java")
+    runtimeOnly("org.postgresql:postgresql")
 
     implementation(project(":library"))
 

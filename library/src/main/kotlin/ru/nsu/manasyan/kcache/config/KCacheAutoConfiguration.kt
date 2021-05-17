@@ -12,7 +12,8 @@ import org.springframework.expression.spel.standard.SpelExpressionParser
 import ru.nsu.manasyan.kcache.aspect.KCacheEvictAspect
 import ru.nsu.manasyan.kcache.aspect.KCacheableAspect
 import ru.nsu.manasyan.kcache.config.jpa.HibernateListenerConfiguration
-import ru.nsu.manasyan.kcache.config.statestorage.StateStorageConfiguration
+import ru.nsu.manasyan.kcache.config.state.provider.StateProviderConfiguration
+import ru.nsu.manasyan.kcache.config.state.storage.StateStorageConfiguration
 import ru.nsu.manasyan.kcache.core.etag.builder.ConcatenateETagBuilder
 import ru.nsu.manasyan.kcache.core.etag.builder.ETagBuilder
 import ru.nsu.manasyan.kcache.core.state.keyparser.KeyParser

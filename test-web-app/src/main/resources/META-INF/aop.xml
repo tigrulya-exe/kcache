@@ -7,6 +7,7 @@
 <!--    <weaver options="-verbose -showWeaveInfo -Xlint:ignore">-->
     <weaver options="-Xlint:ignore">
         <include within="com.example.app..*"/>
+<!--    weave external aspects    -->
         <include within="ru.nsu.manasyan.kcache.aspect.*"/>
     </weaver>
 </aspectj>
