@@ -2,8 +2,8 @@
 JVM library for server-side HTTP-cache validation boosting. KCache adds caching layer for [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) HTTP header in Spring Boot powered applications.
 
 ## Installation
-[![](https://jitpack.io/v/tigrulya-exe/convoyeur.svg)](https://jitpack.io/#tigrulya-exe/convoyeur)
-[Maven/Gradle import instructions](https://jitpack.io/#tigrulya-exe/kcache) <br>
+[![](https://jitpack.io/v/tigrulya-exe/kcache.svg)](https://jitpack.io/#tigrulya-exe/kcache) <br>
+[Maven/Gradle import instructions](https://jitpack.io/#tigrulya-exe/convoyeur/0.1.0) <br>
 
 ## Usage
 ### Mark request handler method as eligible for ETag caching
